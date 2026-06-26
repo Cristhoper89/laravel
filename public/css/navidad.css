@@ -1,0 +1,1927 @@
+/* ==========================================================================
+   🎄 HOJA DE ESTILOS NAVIDEÑA - AMBIENTACIÓN FESTIVA PREMIUM (BLOQUE 1)
+   ========================================================================== */
+
+:root {
+    /* Atmósfera Navideña: Fondo Verde Pino de Medianoche con profundidad */
+    --bg-main: #03120e;               /* Verde pino ultra oscuro */
+    --bg-sidebar: #061c16;            /* Verde bosque para contraste de paneles */
+    --bg-card: rgba(10, 35, 27, 0.55); /* Cristal esmerilado navideño */
+    --border-color: rgba(234, 168, 40, 0.18); /* Escarcha dorada translúcida */
+    
+    /* Colores del Espíritu Festivo */
+    --color-primary: #dc2626;         /* Rojo Santa Claus Vibrante */
+    --color-primary-hover: #ef4444;   /* Rojo Brillo de Bengala */
+    --color-success: #eab308;         /* Dorado Estrella de Navidad */
+    --color-success-hover: #ca8a04;   /* Dorado Oro Viejo */
+
+    /* Textos de Invierno */
+    --text-main: #f8fafc;             /* Blanco Nieve */
+    --text-muted: #87a195;            /* Verde musgo grisáceo suave */
+    --text-white: #ffffff;            /* Blanco Puro */
+}
+
+/* 🚀 Estilos Generales de la Estructura (Efecto de iluminación central) */
+.main-body, .app-layout, .main-content {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 30%, #0a2c20 0%, #03120e 75%);
+    color: var(--text-main);
+}
+
+/* 🧭 Contenedor del Sidebar (Fondo más denso para separar áreas) */
+.main-sidebar {
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid rgba(234, 168, 40, 0.12);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Título de la Empresa (Efecto Oro Incandescente) */
+.sidebar-title {
+    background: linear-gradient(to right, #ffe599, #eab308);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.fallback-logo {
+    background-color: #0b251e;
+    border: 1px solid var(--border-color);
+}
+
+/* 👥 Tarjeta de Perfil de Usuario (Estilo cabaña elegante) */
+.profile-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.7) 0%, rgba(5, 20, 15, 0.8) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.profile-card img {
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 10px rgba(220, 38, 38, 0.4);
+}
+
+.profile-avatar {
+    background-image: linear-gradient(to bottom right, #dc2626, #991b1b);
+    color: var(--text-white);
+}
+
+.profile-name {
+    color: var(--text-white);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.profile-badge {
+    background-color: rgba(220, 38, 38, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+/* 🔗 Enlaces de Navegación */
+.nav-link {
+    background-color: rgba(10, 35, 27, 0.4);
+    color: #a3beaf;
+    border: 1px solid transparent;
+    transition: all 0.25s ease;
+}
+
+.nav-link:hover {
+    background: linear-gradient(90deg, rgba(220, 38, 38, 0.2) 0%, rgba(10, 35, 27, 0.2) 100%);
+    color: var(--text-white);
+    border-left: 3px solid var(--color-primary);
+    padding-left: calc(1rem - 3px); /* Evita el salto por el borde */
+}
+
+/* Enlaces con variantes de éxito (Registrar venta, Carrito) -> Destacan en Dorado */
+.nav-link.nav-success:hover {
+    background: linear-gradient(90deg, rgba(234, 168, 40, 0.2) 0%, rgba(10, 35, 27, 0.2) 100%);
+    border-left: 3px solid var(--color-success);
+}
+
+/* 🚪 Botón de Cierre de Sesión */
+.logout-form {
+    border-top: 1px solid rgba(234, 168, 40, 0.1);
+}
+
+.logout-btn {
+    background-color: rgba(220, 38, 38, 0.05);
+    color: #f87171;
+    border: 1px solid rgba(220, 38, 38, 0.15);
+}
+
+.logout-btn:hover {
+    background-color: #991b1b;
+    color: var(--text-white);
+    box-shadow: 0 4px 12px rgba(153, 27, 27, 0.4);
+}
+
+/* Ajustes de scrollbar (Estilo pino discreto) */
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #0d3528;
+}
+
+
+/* ==========================================================================
+   🏠 VISTA DE BIENVENIDA / LANDING PAGE (La Cabaña Navideña)
+   ========================================================================== */
+
+.welcome-body {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 40%, #0b3124 0%, #03120e 80%);
+    color: var(--text-main);
+}
+
+/* 🎆 Luces de Neón de Fondo transformadas en Aura Navideña CÁLIDA */
+.glow-top {
+    background-color: #dc2626; /* Resplandor Rojo */
+    opacity: 0.07;
+}
+
+.glow-bottom {
+    background-color: #eab308; /* Resplandor Dorado */
+    opacity: 0.07;
+}
+
+/* 🏷️ Marca / Logotipo (Brillo Oro de Alta Gama) */
+.brand-name {
+    background: linear-gradient(to right, #ffe599, #eab308, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 8px rgba(234, 168, 40, 0.2));
+}
+
+/* 🔗 Botones y Enlaces del Header */
+.btn-panel {
+    background-color: rgba(10, 35, 27, 0.6);
+    border: 1px solid rgba(234, 168, 40, 0.3);
+    color: var(--color-success);
+    backdrop-filter: blur(4px);
+}
+
+.btn-panel:hover {
+    background-color: rgba(234, 168, 40, 0.15);
+    color: #ffffff;
+}
+
+.link-login {
+    color: #a3beaf;
+}
+
+.link-login:hover {
+    color: var(--text-white);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.btn-register {
+    background: linear-gradient(to right, #dc2626, #f97316);
+    color: var(--text-white);
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.btn-register:hover {
+    background: linear-gradient(to right, #ef4444, #ea580c);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
+}
+
+/* ✨ Elementos del Hero */
+.welcome-badge {
+    background-color: rgba(234, 168, 40, 0.1);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    color: var(--color-success);
+}
+
+.hero-highlight {
+    background: linear-gradient(to right, #ffe599, #eab308, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    color: #9cbdae;
+}
+
+/* 🍽️ Botones del Centro (Llamados a la Acción Festivos) */
+.btn-hero-primary {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    color: #03120e;
+    font-weight: 700;
+    box-shadow: 0 5px 18px rgba(234, 168, 40, 0.35);
+}
+
+.btn-hero-primary:hover {
+    background: linear-gradient(135deg, #f59e0b 0%, #a16207 100%);
+    box-shadow: 0 7px 25px rgba(234, 168, 40, 0.5);
+}
+
+.btn-hero-secondary {
+    background-color: rgba(10, 35, 27, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-main);
+    backdrop-filter: blur(4px);
+}
+
+.btn-hero-secondary:hover {
+    color: var(--text-white);
+    background-color: rgba(14, 46, 36, 0.7);
+    border-color: rgba(234, 168, 40, 0.3);
+}
+
+/* 🎴 Tarjetas de Características */
+.features-grid {
+    border-top: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.feature-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.6) 0%, rgba(5, 20, 15, 0.7) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    backdrop-filter: blur(6px);
+}
+
+.feature-desc {
+    color: #8faea0;
+}
+
+/* 📜 Footer */
+.main-footer {
+    border-top: 1px solid rgba(234, 168, 40, 0.12);
+    color: #79998b;
+}
+
+/* ==========================================================================
+   🔑 PANTALLAS DE AUTENTICACIÓN (Login / Registro Navideño)
+   ========================================================================== */
+
+.auth-body {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 30%, #0a2c20 0%, #03120e 75%);
+    color: var(--text-main);
+}
+
+/* 🎇 Destello de Fondo (Resplandor Dorado Cálido) */
+.auth-glow {
+    background-color: #eab308;
+    opacity: 0.05;
+}
+
+/* 🏷️ Identidad de Marca (Gradiente Oro y Nieve) */
+.auth-brand-name {
+    background: linear-gradient(to right, #ffe599, #eab308, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 6px rgba(234, 168, 40, 0.2));
+}
+
+.auth-title {
+    color: var(--text-white);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.auth-subtitle {
+    color: #a3beaf;
+}
+
+/* 🎴 Tarjeta del Formulario (Cristal Esmerilado de Alta Gama) */
+.auth-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.75) 0%, rgba(5, 20, 15, 0.85) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.22);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+/* 🏷️ Etiquetas y Elementos de Formulario */
+.auth-label {
+    color: #baebd1;
+    font-weight: 500;
+}
+
+.auth-input {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.25) !important;
+    color: #ffffff !important;
+}
+
+/* ⚡ Enfoque / Focus en Campos (Brillo Rojo Navideño) */
+.auth-input:focus {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.25) !important;
+}
+
+/* ⚠️ Caja de Errores de Laravel */
+.auth-errors-box {
+    background-color: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    color: #fca5a5;
+}
+
+/* 🚀 Botón de Enviar (Éxito -> Oro Brillante) */
+.auth-btn-submit {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
+    color: #03120e !important;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(234, 168, 40, 0.35);
+}
+
+.auth-btn-submit:hover {
+    background: linear-gradient(135deg, #f59e0b 0%, #a16207 100%) !important;
+    box-shadow: 0 6px 20px rgba(234, 168, 40, 0.45);
+}
+
+/* 🔗 Textos y Enlaces inferiores */
+.auth-footer-text {
+    color: #8faea0;
+}
+
+.auth-link {
+    color: #f87171; /* Enlaces secundarios en tono rojo suave reflectante */
+}
+
+.auth-link:hover {
+    color: var(--text-white);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* 🔗 Enlaces internos específicos del Login */
+.auth-link-forgot {
+    color: #baebd1;
+    opacity: 0.8;
+}
+
+.auth-link-forgot:hover {
+    opacity: 1;
+    color: var(--text-white);
+}
+
+/* 🔘 Checkbox Recordarme */
+.auth-checkbox {
+    background-color: rgba(4, 18, 14, 0.6);
+    border-color: rgba(234, 168, 40, 0.3);
+}
+
+.auth-checkbox:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+.auth-label-checkbox {
+    color: #8faea0;
+}
+
+/* 🚀 Botón de ingreso estilo Primario (Rojo Santa Claus) */
+.auth-btn-primary {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+    color: var(--text-white) !important;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.auth-btn-primary:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #7f1d1d 100%) !important;
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.45);
+}
+
+/* 🔗 Enlace inferior para registrarse (Dorado) */
+.auth-link-alt {
+    color: #eab308;
+}
+
+.auth-link-alt:hover {
+    color: var(--text-white);
+}
+
+/* ✨ Caja de Estado Exitoso */
+.auth-status-box {
+    background-color: rgba(234, 168, 40, 0.1);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    color: #fde047;
+}
+
+/* ==========================================================================
+   🛠️ PANEL DE ADMINISTRACIÓN (Listado de Productos Navideño)
+   ========================================================================== */
+
+.admin-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 30%, #0a2c20 0%, #03120e 75%);
+    color: var(--text-main);
+}
+
+/* 🎴 Tarjetas Generales (Cristal Esmerilado Cabaña) */
+.admin-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.7) 0%, rgba(5, 20, 15, 0.8) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.2);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Corrección para Título de Administración Navideño */
+/* El contenedor h2 ya no lleva el clip de texto, lo lleva el span interno */
+.admin-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-title span {
+    /* Aquí mueves el gradiente que tenías antes */
+    background: linear-gradient(to right, #ffe599, #eab308); /* Ejemplo Navidad */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.admin-subtitle {
+    color: #8faea0;
+}
+
+/* 🚀 Botón de Agregar (Éxito -> Oro Brillante) */
+.admin-btn-success {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
+    color: #03120e !important;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(234, 168, 40, 0.3);
+}
+
+.admin-btn-success:hover {
+    background: linear-gradient(135deg, #f59e0b 0%, #a16207 100%) !important;
+    box-shadow: 0 6px 18px rgba(234, 168, 40, 0.4);
+}
+
+/* ✨ Mensajes de éxito */
+.admin-alert-success {
+    background-color: rgba(234, 168, 40, 0.1);
+    border-color: rgba(234, 168, 40, 0.25);
+    color: #fde047;
+}
+
+/* 📊 Tabla de Datos */
+.admin-table-th-row {
+    border-bottom: 2px solid rgba(234, 168, 40, 0.2) !important;
+    background-color: rgba(4, 18, 14, 0.5) !important;
+    color: #baebd1;
+    font-weight: 600;
+}
+
+.admin-table-row {
+    border-bottom: 1px solid rgba(234, 168, 40, 0.1) !important;
+    transition: background-color 0.2s ease;
+}
+
+.admin-table-row:hover {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* 🖼️ Miniaturas de Imágenes */
+.admin-img-container {
+    background-color: rgba(4, 18, 14, 0.6);
+    border: 1px solid rgba(234, 168, 40, 0.2);
+}
+
+.admin-img-placeholder {
+    background: linear-gradient(135deg, rgba(234, 168, 40, 0.1), rgba(220, 38, 38, 0.15));
+}
+
+/* 🏷️ Badges y Precios */
+.admin-badge-unit {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    color: #a3beaf;
+}
+
+.admin-text-price {
+    color: #eab308; /* Precio resaltado en Oro */
+    font-weight: 700;
+}
+
+/* 📦 Alertas de Inventario / Stock */
+.admin-stock-normal {
+    color: #4ade80; /* Verde brillante festivo */
+}
+
+.admin-stock-critical {
+    color: #f87171; /* Rojo suave reflectante para advertencias */
+    text-shadow: 0 0 8px rgba(220, 38, 38, 0.3);
+    font-weight: bold;
+}
+
+/* ⚙️ Botones de Acciones (Editar / Eliminar) */
+.admin-action-btn {
+    background-color: rgba(4, 18, 14, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.2);
+    transition: all 0.2s ease;
+}
+
+.admin-action-btn.btn-edit {
+    color: #fca5a5; /* Rojo claro / Coral sutil para el icono */
+}
+
+.admin-action-btn.btn-edit:hover {
+    border-color: #dc2626;
+    background-color: rgba(220, 38, 38, 0.15);
+    color: #ffffff;
+}
+
+.admin-action-btn.btn-delete {
+    color: #ef4444;
+}
+
+.admin-action-btn.btn-delete:hover {
+    border-color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.15);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.admin-table-empty {
+    color: #8faea0;
+}
+
+/* ==========================================================================
+   🚨 REPARACIÓN COMPLETA DEL SIDEBAR (Para corregir las capturas adjuntas)
+   ========================================================================== */
+
+/* Contenedor del Perfil de Usuario */
+.sidebar-user-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.75) 0%, rgba(5, 20, 15, 0.85) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Botones de menú de la barra lateral */
+.sidebar-nav-link {
+    background-color: rgba(10, 35, 27, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    color: #a3beaf;
+    border-radius: 1rem;
+    padding: 0.85rem 1.25rem;
+    transition: all 0.25s ease-in-out;
+}
+
+.sidebar-nav-link:hover {
+    border-color: #dc2626;
+    background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, rgba(10, 35, 27, 0.2) 100%);
+    color: var(--text-white);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+}
+
+
+/* ==========================================================================
+   🏪 MÓDULO DE CAJA REGISTRADORA Y VENTAS (POS Navideño)
+   ========================================================================== */
+
+.pos-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 30%, #0a2c20 0%, #03120e 75%);
+    color: var(--text-main);
+}
+
+.pos-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.18);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Corrección para Título del POS Navideño */
+.pos-main-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pos-main-title span{
+    background: linear-gradient(to right, #ffe599, #eab308);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pos-section-title {
+    color: #baebd1;
+    font-weight: 600;
+}
+
+.pos-subtitle, .pos-helper-text {
+    color: #8faea0;
+}
+
+/* 🔄 Selectores y Pestañas (Tabs Navideñas) */
+.pos-tabs-container {
+    background-color: rgba(4, 18, 14, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+/* Tab Activa Primaria -> Rojo Santa Claus */
+.tab-active-cyan {
+    background-color: rgba(220, 38, 38, 0.15) !important;
+    color: #f87171 !important;
+    border: 1px solid rgba(220, 38, 38, 0.35) !important;
+}
+
+/* Tab Activa Secundaria -> Oro Incandescente */
+.tab-active-amber {
+    background-color: rgba(234, 168, 40, 0.12) !important;
+    color: #eab308 !important;
+    border: 1px solid rgba(234, 168, 40, 0.35) !important;
+}
+
+.tab-inactive {
+    color: #8faea0;
+    border-color: transparent;
+}
+
+.tab-inactive:hover {
+    color: var(--text-white);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* 🔍 Custom Selector & Dropdown */
+.pos-select-trigger {
+    background-color: rgba(4, 18, 14, 0.6);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    color: var(--text-white);
+}
+
+.pos-select-trigger:hover {
+    border-color: rgba(234, 168, 40, 0.45);
+    box-shadow: 0 0 8px rgba(234, 168, 40, 0.15);
+}
+
+.pos-placeholder-text {
+    color: #79998b;
+}
+
+.pos-dropdown-menu {
+    background: #061c16;
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.pos-dropdown-search-box {
+    background-color: #03120e;
+    border-bottom: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.pos-dropdown-input {
+    background-color: rgba(10, 35, 27, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: var(--text-white) !important;
+}
+
+.pos-dropdown-input:focus {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
+}
+
+.pos-option-row {
+    border-bottom: 1px solid rgba(234, 168, 40, 0.08);
+    color: #f8fafc;
+}
+
+.pos-option-row:hover {
+    background-color: rgba(234, 168, 40, 0.1) !important;
+}
+
+.pos-option-img-box {
+    background-color: #03120e;
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.pos-option-name {
+    color: var(--text-white);
+}
+
+.pos-option-meta {
+    color: #8faea0;
+}
+
+/* 📥 Campos de Entrada y Botones */
+.pos-input, .pos-input-nested {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: var(--text-white) !important;
+}
+
+.pos-input:focus, .pos-input-nested:focus {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
+}
+
+.pos-input-monto {
+    background-color: rgba(4, 18, 14, 0.7) !important;
+    border: 1px solid rgba(234, 168, 40, 0.25) !important;
+    color: #eab308 !important; /* El monto destaca en Oro */
+    font-weight: bold;
+}
+
+.pos-btn-add {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+    color: var(--text-white) !important;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+.pos-btn-add:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #7f1d1d 100%) !important;
+    box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4);
+}
+
+/* 📊 Tablas de Consumo */
+.pos-table-header {
+    background-color: rgba(4, 18, 14, 0.5) !important;
+    border-bottom: 2px solid rgba(234, 168, 40, 0.2) !important;
+}
+
+.pos-table-th-row {
+    border-color: transparent;
+    color: #baebd1;
+    font-weight: 600;
+}
+
+.pos-table-tbody {
+    border-color: rgba(234, 168, 40, 0.1);
+}
+
+.pos-table-row-injected:hover {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.pos-text-row-subtotal {
+    color: #eab308; /* Subtotales dorados */
+    font-weight: 600;
+}
+
+.pos-btn-remove-row {
+    color: #ef4444;
+    transition: transform 0.2s;
+}
+
+.pos-btn-remove-row:hover {
+    color: #f87171;
+    transform: scale(1.15);
+}
+
+.pos-table-empty {
+    color: #8faea0;
+}
+
+/* 💰 Checkout & Totales */
+.pos-totals-box {
+    background-color: rgba(4, 18, 14, 0.45);
+    border: 1px solid rgba(234, 168, 40, 0.2);
+}
+
+.pos-totals-divider {
+    border-color: rgba(234, 168, 40, 0.15);
+}
+
+.pos-text-total {
+    color: #eab308;
+    text-shadow: 0 0 10px rgba(234, 168, 40, 0.2);
+    font-weight: 800;
+}
+
+.pos-btn-invoice {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
+    color: #03120e !important;
+    font-weight: 700;
+    box-shadow: 0 5px 18px rgba(234, 168, 40, 0.35);
+}
+
+.pos-btn-invoice:hover {
+    background: linear-gradient(135deg, #f59e0b 0%, #a16207 100%) !important;
+    box-shadow: 0 7px 25px rgba(234, 168, 40, 0.5);
+}
+
+/* 📦 Automatización e Inversiones (Variantes secundarias) */
+.pos-automation-box {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.pos-text-brand {
+    color: #eab308;
+}
+
+.pos-btn-action {
+    background: rgba(234, 168, 40, 0.1) !important;
+    border: 1px solid rgba(234, 168, 40, 0.3) !important;
+    color: #eab308 !important;
+}
+
+.pos-btn-action:hover {
+    background: rgba(234, 168, 40, 0.25) !important;
+    color: #ffffff !important;
+}
+
+/* 🚨 Alertas */
+.pos-alert-danger {
+    background-color: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    color: #fca5a5;
+}
+
+.pos-alert-success {
+    background-color: rgba(234, 168, 40, 0.1);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    color: #fde047;
+}
+
+/* ==========================================================================
+   👥 MÓDULO DE GESTIÓN DE USUARIOS (Formulario de Registro - Navideño)
+   ========================================================================== */
+
+.usr-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 20%, #0a2c20 0%, #03120e 80%);
+    color: var(--text-main);
+}
+
+.usr-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.18);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.usr-main-title {
+    background: linear-gradient(to right, #ffe599, #eab308);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.usr-subtitle, .usr-helper-text {
+    color: #8faea0;
+}
+
+.usr-label {
+    color: #baebd1;
+    font-weight: 500;
+}
+
+/* 📥 Campos de Entrada (Inputs y Selects) */
+.usr-input {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: var(--text-white) !important;
+}
+
+.usr-input::placeholder {
+    color: rgba(143, 174, 160, 0.4);
+}
+
+.usr-input:focus {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
+}
+
+/* ❌ Textos de Error de Validación */
+.usr-text-error {
+    color: #f87171;
+}
+
+/* 📐 Líneas Divisoras y Sub-contenedores */
+.usr-divider-top {
+    border-top: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.usr-divider-bottom {
+    border-bottom: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.usr-subcard {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.12);
+}
+
+.usr-preview-box {
+    background-color: #03120e;
+    border: 1px solid rgba(234, 168, 40, 0.1);
+}
+
+.usr-avatar-placeholder {
+    background-color: rgba(10, 35, 27, 0.6);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    color: #8faea0;
+}
+
+/* 🔄 Switcher / Toggle de tipo de Imagen */
+.usr-toggle-container {
+    background-color: rgba(4, 18, 14, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.usr-toggle-container .toggle-active {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+    color: var(--text-white) !important;
+    font-weight: 600;
+}
+
+.usr-toggle-container .toggle-inactive {
+    color: #8faea0;
+}
+
+.usr-toggle-container .toggle-inactive:hover {
+    color: var(--text-white);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* 📁 Personalización del Input File Nativo */
+.usr-file-input {
+    color: #8faea0;
+}
+
+.usr-file-input::file-selector-button {
+    background-color: rgba(10, 35, 27, 0.8);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    color: #eab308;
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.usr-file-input::file-selector-button:hover {
+    background-color: rgba(234, 168, 40, 0.15);
+    border-color: #eab308;
+}
+
+/* 🔘 Botones de Guardar / Cancelar */
+.usr-btn-cancel {
+    background-color: rgba(4, 18, 14, 0.5) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: #8faea0 !important;
+}
+
+.usr-btn-cancel:hover {
+    color: var(--text-white) !important;
+    border-color: rgba(234, 168, 40, 0.4) !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.usr-btn-submit {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+    color: var(--text-white) !important;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+.usr-btn-submit:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #7f1d1d 100%) !important;
+    box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4);
+}
+
+/* === Extensiones para el Listado de Usuarios (Index) === */
+
+.usr-alert-success {
+    background-color: rgba(234, 168, 40, 0.1);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    color: #fde047;
+}
+
+.usr-search-box {
+    background-color: rgba(4, 18, 14, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.2);
+}
+
+.usr-search-box:focus-within {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+}
+
+.usr-search-icon {
+    color: #8faea0;
+}
+
+.usr-table-container {
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.usr-table-header {
+    background-color: rgba(4, 18, 14, 0.6);
+    border-bottom: 2px solid rgba(234, 168, 40, 0.2);
+    color: #baebd1;
+}
+
+.usr-table-body {
+    background-color: rgba(4, 18, 14, 0.25);
+}
+
+.usr-table-row {
+    border-bottom: 1px solid rgba(234, 168, 40, 0.08) !important;
+}
+
+.usr-table-row:hover {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.usr-id-text {
+    color: rgba(143, 174, 160, 0.5);
+}
+
+/* 👤 Avatares en la Tabla */
+.usr-avatar-ring {
+    border-color: rgba(234, 168, 40, 0.25);
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+}
+
+.usr-avatar-default {
+    background: linear-gradient(135deg, #dc2626, #eab308);
+}
+
+/* 🏷️ Badges de Roles */
+.usr-badge-admin {
+    background-color: rgba(220, 38, 38, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.usr-badge-client {
+    background-color: rgba(10, 35, 27, 0.6);
+    color: #8faea0;
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+/* 🎛️ Botones de Acción (Iconos en Tabla) */
+.usr-action-btn {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.usr-action-btn.btn-edit {
+    color: #eab308;
+}
+
+.usr-action-btn.btn-edit:hover {
+    background-color: #eab308;
+    color: #03120e;
+    border-color: #eab308;
+}
+
+.usr-action-btn.btn-delete {
+    color: #ef4444;
+}
+
+.usr-action-btn.btn-delete:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+}
+
+/* 📑 Paginación Navideña */
+.usr-pagination .page-link {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.15) !important;
+    color: #8faea0 !important;
+}
+
+.usr-pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+.usr-pagination .page-link:hover {
+    background-color: rgba(234, 168, 40, 0.1) !important;
+    color: var(--text-white) !important;
+    border-color: rgba(234, 168, 40, 0.3) !important;
+}
+
+/* === Ajustes del Formulario de Edición y Creación === */
+.usr-highlight {
+    color: #eab308;
+}
+
+.usr-error-text {
+    color: #f87171;
+}
+
+.usr-photo-section {
+    background-color: rgba(4, 18, 14, 0.3);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.usr-photo-preview-box {
+    background-color: #03120e;
+    border: 1px solid rgba(234, 168, 40, 0.1);
+}
+
+/* ==========================================================================
+   🚚 MÓDULO DE GESTIÓN DE PROVEEDORES (prv- Navideño)
+   ========================================================================== */
+
+.prv-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 20%, #0a2c20 0%, #03120e 80%);
+}
+
+.prv-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.18);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.prv-main-title {
+    background: linear-gradient(to right, #ffe599, #eab308);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.prv-subtitle {
+    color: #8faea0;
+}
+
+.prv-label {
+    color: #baebd1;
+    font-weight: 500;
+}
+
+.prv-input {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: var(--text-white) !important;
+}
+
+.prv-input::placeholder {
+    color: rgba(143, 174, 160, 0.35);
+}
+
+.prv-input:focus {
+    border-color: #eab308 !important;
+    box-shadow: 0 0 0 2px rgba(234, 168, 40, 0.2) !important;
+}
+
+.prv-photo-section {
+    background-color: rgba(4, 18, 14, 0.3);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.prv-photo-preview-box {
+    background-color: #03120e;
+    border: 1px solid rgba(234, 168, 40, 0.1);
+}
+
+.prv-avatar-placeholder {
+    background-color: rgba(10, 35, 27, 0.6);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    color: #8faea0;
+}
+
+.prv-divider-top {
+    border-top: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.prv-divider-bottom {
+    border-bottom: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.prv-error-text {
+    color: #f87171;
+}
+
+.prv-btn-cancel {
+    background-color: rgba(4, 18, 14, 0.5) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: #8faea0 !important;
+}
+
+.prv-btn-cancel:hover {
+    color: var(--text-white) !important;
+    border-color: rgba(234, 168, 40, 0.4) !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.prv-btn-submit {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+    color: #03120e !important;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.prv-btn-submit:hover {
+    background: linear-gradient(135deg, #34d399 0%, #065f46 100%) !important;
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.35);
+}
+
+/* --- Extensiones para la Vista de Listado (Index) --- */
+
+.prv-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #34d399;
+}
+
+.prv-search-container {
+    background-color: rgba(4, 18, 14, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.2);
+}
+
+.prv-search-container:focus-within {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.prv-search-icon {
+    color: #8faea0;
+}
+
+.prv-search-input {
+    color: var(--text-white);
+}
+
+.prv-search-input::placeholder {
+    color: rgba(143, 174, 160, 0.4);
+}
+
+.prv-table-border {
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.prv-table-header {
+    background-color: rgba(4, 18, 14, 0.6);
+    border-bottom: 2px solid rgba(234, 168, 40, 0.2);
+    color: #baebd1;
+}
+
+.prv-table-body {
+    background-color: rgba(4, 18, 14, 0.25);
+}
+
+/* Forzar la eliminación de la línea blanca heredada de Tailwind */
+.divide-y.prv-table-divide > :not([hidden]) ~ :not([hidden]),
+.prv-table-row,
+.prv-table-row td {
+    border-color: rgba(234, 168, 40, 0.08) !important;
+}
+
+.prv-table-row {
+    color: #f8fafc;
+}
+
+.prv-table-row:hover {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.prv-id-cell {
+    color: rgba(143, 174, 160, 0.5);
+}
+
+.prv-avatar-box {
+    background-color: #03120e;
+    border: 1px solid rgba(234, 168, 40, 0.2);
+}
+
+.prv-avatar-icon {
+    color: #10b981;
+}
+
+.prv-company-title {
+    color: var(--text-white);
+    font-weight: 600;
+}
+
+.prv-contact-text {
+    color: #baebd1;
+}
+
+.prv-mono-text {
+    color: #8faea0;
+}
+
+.prv-info-text {
+    color: #8faea0;
+}
+
+.prv-empty-icon {
+    color: rgba(143, 174, 160, 0.3);
+}
+
+/* Acciones y botones de fila */
+.prv-action-btn {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.prv-edit-btn {
+    color: #10b981;
+}
+
+.prv-edit-btn:hover {
+    background-color: #10b981;
+    color: #03120e;
+    border-color: #10b981;
+}
+
+.prv-delete-btn {
+    color: #ef4444;
+}
+
+.prv-delete-btn:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+}
+
+/* --- Estilos de Paginación Centralizados --- */
+
+.prv-pagination-container .page-link {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.15) !important;
+    color: #8faea0 !important;
+}
+
+.prv-pagination-container .page-item.active .page-link {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+    border-color: #10b981 !important;
+    color: #03120e !important;
+}
+
+.prv-pagination-container .page-link:hover {
+    background-color: rgba(234, 168, 40, 0.1) !important;
+    color: var(--text-white) !important;
+    border-color: rgba(234, 168, 40, 0.3) !important;
+}
+
+/* 📁 Personalización del Input de Archivos */
+.prv-file-input {
+    color: #8faea0 !important;
+}
+
+.prv-file-input::file-selector-button {
+    background-color: rgba(10, 35, 27, 0.8) !important;
+    border: 1px solid rgba(234, 168, 40, 0.25) !important;
+    color: #10b981 !important;
+}
+
+.prv-file-input::file-selector-button:hover {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    border-color: #10b981 !important;
+}
+
+/* ==========================================================================
+    🏷️ EXTENSIONES PARA EL MÓDULO DE CATEGORÍAS (CAT- Navideño)
+   ========================================================================== */
+
+.cat-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 20%, #0a2c20 0%, #03120e 80%);
+}
+
+.cat-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.18);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.cat-main-title {
+    background: linear-gradient(to right, #ffe599, #eab308);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.cat-subtitle {
+    color: #8faea0;
+}
+
+.cat-alert-success {
+    background-color: rgba(234, 168, 40, 0.1);
+    border: 1px solid rgba(234, 168, 40, 0.25);
+    color: #fde047;
+}
+
+/* 🔍 Input de Búsqueda */
+.cat-search-container {
+    background-color: rgba(4, 18, 14, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.2);
+}
+
+.cat-search-container:focus-within {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.cat-search-icon {
+    color: #8faea0;
+}
+
+.cat-search-input {
+    color: var(--text-white);
+}
+
+.cat-search-input::placeholder {
+    color: rgba(143, 174, 160, 0.4);
+}
+
+/* 📊 Estilos de Tabla y Filas (Solución Línea Blanca) */
+.cat-table-border {
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.cat-table-header {
+    background-color: rgba(4, 18, 14, 0.6);
+    border-bottom: 2px solid rgba(234, 168, 40, 0.2);
+    color: #baebd1;
+}
+
+.cat-table-body {
+    background-color: rgba(4, 18, 14, 0.25);
+}
+
+.cat-table-body tr,
+.cat-table-body td {
+    border-bottom: 1px solid rgba(234, 168, 40, 0.08) !important; 
+    color: #f8fafc;
+}
+
+.cat-table-body tr:last-child,
+.cat-table-body tr:last-child td {
+    border-bottom: none !important;
+}
+
+.cat-table-row:hover {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.cat-id-cell {
+    color: rgba(143, 174, 160, 0.5);
+}
+
+.cat-name-cell {
+    color: var(--text-white);
+}
+
+.cat-empty-icon {
+    color: rgba(143, 174, 160, 0.3);
+}
+
+/* 🏷️ Badges de Estado */
+.cat-badge-active {
+    background-color: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #34d399;
+}
+
+.cat-badge-inactive {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    color: #8faea0;
+}
+
+/* ⚡ Botones de Acción */
+.cat-action-btn {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.cat-edit-btn {
+    color: #10b981;
+}
+
+.cat-edit-btn:hover {
+    background-color: #10b981;
+    color: #03120e;
+    border-color: #10b981;
+}
+
+.cat-delete-btn {
+    color: #ef4444;
+}
+
+.cat-delete-btn:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+}
+
+.cat-btn-submit {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+    color: #03120e !important;
+    font-weight: 600;
+}
+
+.cat-btn-submit:hover {
+    background: linear-gradient(135deg, #34d399 0%, #065f46 100%) !important;
+}
+
+/* 🔄 Líneas divisorias generales y Paginación */
+.cat-divider-top {
+    border-top: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.cat-pagination-container .page-link {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.15) !important;
+    color: #8faea0 !important;
+}
+
+.cat-pagination-container .page-item.active .page-link {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+    border-color: #10b981 !important;
+    color: #03120e !important;
+}
+
+.cat-pagination-container .page-link:hover {
+    background-color: rgba(234, 168, 40, 0.1) !important;
+    color: var(--text-white) !important;
+}
+
+/* 📝 Componentes de Formulario para Categorías */
+.cat-input {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: var(--text-white) !important;
+}
+
+.cat-input::placeholder {
+    color: rgba(143, 174, 160, 0.35);
+}
+
+.cat-input:focus {
+    border-color: #eab308 !important;
+    box-shadow: 0 0 0 2px rgba(234, 168, 40, 0.2) !important;
+}
+
+.cat-error-text {
+    color: #f87171;
+}
+
+.cat-btn-cancel {
+    background-color: rgba(4, 18, 14, 0.5) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: #8faea0 !important;
+}
+
+.cat-btn-cancel:hover {
+    color: var(--text-white) !important;
+    border-color: rgba(234, 168, 40, 0.4) !important;
+}
+
+
+/* ==========================================================================
+    🧾 MODULO: HISTORIAL DE VENTAS Y MOVIMIENTOS DE CAJA (.his- Navideño)
+   ========================================================================== */
+
+.his-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 20%, #0a2c20 0%, #03120e 80%);
+}
+
+.his-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.his-main-title {
+    background: linear-gradient(to right, #ffe599, #eab308);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.his-subtitle { color: #8faea0; }
+.his-text-white { color: var(--text-white); }
+.his-text-muted { color: #8faea0; }
+
+.his-badge {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    color: #baebd1;
+}
+
+/* 🎛️ Selectores Dinámicos de Filtros (Alpine.js States) */
+.his-filter-inactive {
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    background-color: rgba(4, 18, 14, 0.4);
+    color: #8faea0;
+}
+.his-filter-inactive:hover {
+    border-color: rgba(234, 168, 40, 0.35);
+    color: var(--text-white);
+}
+
+.his-filter-active-facturas {
+    border-color: #38bdf8 !important; 
+    background-color: rgba(4, 18, 14, 0.7) !important;
+    color: #38bdf8 !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+.his-filter-active-gastos {
+    border-color: #eab308 !important; 
+    background-color: rgba(4, 18, 14, 0.7) !important;
+    color: #eab308 !important;
+    box-shadow: 0 0 12px rgba(234, 168, 40, 0.2);
+}
+
+.his-filter-active-ingresos {
+    border-color: #c084fc !important; 
+    background-color: rgba(4, 18, 14, 0.7) !important;
+    color: #c084fc !important;
+    box-shadow: 0 0 12px rgba(192, 132, 252, 0.2);
+}
+
+/* 🎨 Semántica de Estados Financieros y Badges */
+.his-text-success { color: #10b981; }     
+.his-text-warning { color: #eab308; }                   
+.his-text-accent  { color: #c084fc; }                   
+.his-text-danger  { color: #f87171; }                   
+
+.his-container-anulado {
+    background-color: rgba(4, 18, 14, 0.5);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+.his-status-active-bg { background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: #34d399; }
+.his-status-active-dot { background-color: #10b981; }
+
+.his-status-inactive-bg { background-color: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.25); color: #f87171; }
+.his-status-inactive-dot { background-color: #dc2626; }
+
+.his-status-warning-bg { background-color: rgba(234, 168, 40, 0.1); border: 1px solid rgba(234, 168, 40, 0.25); color: #fde047; }
+.his-status-accent-bg { background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.25); color: #e9d5ff; }
+
+.his-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #34d399;
+}
+
+.his-btn-action {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    color: #8faea0;
+}
+.his-btn-action:hover {
+    background-color: rgba(234, 168, 40, 0.1);
+    color: #eab308; 
+}
+
+.his-btn-danger {
+    background-color: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: #f87171;
+}
+.his-btn-danger:hover {
+    background-color: rgba(220, 38, 38, 0.25);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+    ⚙️ MÓDULO DE CONFIGURACIÓN DEL SISTEMA (.cfg- Navideño)
+   ========================================================================== */
+
+.cfg-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 20%, #0a2c20 0%, #03120e 80%);
+}
+
+.cfg-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.18);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.cfg-input {
+    background-color: rgba(4, 18, 14, 0.6) !important;
+    border: 1px solid rgba(234, 168, 40, 0.2) !important;
+    color: var(--text-white) !important;
+}
+
+.cfg-input:focus {
+    border-color: #eab308 !important;
+    box-shadow: 0 0 0 2px rgba(234, 168, 40, 0.2) !important;
+}
+
+/* 🎭 Selector de Temas Visuales (Radio Cards) */
+.cfg-theme-card {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover general de las opciones */
+.cfg-theme-label:hover .cfg-theme-card {
+    border-color: rgba(234, 168, 40, 0.4);
+    background-color: rgba(14, 46, 36, 0.3);
+}
+
+.cfg-theme-label:hover .cfg-theme-title {
+    color: #eab308;
+}
+
+/* ⚡ Estado SELECCIONADO (peer-checked) controlado por CSS puro */
+.cfg-radio-input:checked + .cfg-theme-card {
+    border-color: #10b981 !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.2);
+}
+
+/* Expansión del círculo interno cuando el tema está activo */
+.cfg-radio-input:checked + .cfg-theme-card .cfg-dot-inner {
+    transform: scale(1);
+}
+
+.cfg-radio-input:checked + .cfg-theme-card .cfg-dot-outer {
+    border-color: #10b981;
+}
+
+/* Componentes internos del indicador circular */
+.cfg-dot-outer {
+    border: 2px solid rgba(234, 168, 40, 0.2);
+    background-color: rgba(4, 18, 14, 0.5);
+    transition: border-color 0.2s ease;
+}
+
+.cfg-dot-inner {
+    background-color: #10b981;
+    transform: scale(0);
+    transition: transform 0.2s ease;
+}
+
+/* Botón principal de guardado */
+.cfg-btn-submit {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+    color: #03120e !important;
+    font-weight: 600;
+}
+
+.cfg-btn-submit:hover {
+    background: linear-gradient(135deg, #34d399 0%, #065f46 100%) !important;
+    color: #03120e !important;
+}
+
+/* Nuevas Clases Colectoras - Tema Navideño */
+.cfg-inner-box {
+    background-color: rgba(4, 18, 14, 0.5) !important;
+    border-color: rgba(234, 168, 40, 0.12) !important;
+}
+
+.cfg-btn-secondary {
+    background: linear-gradient(135deg, #0e2e24 0%, #05140f 100%) !important;
+    border: 1px solid rgba(234, 168, 40, 0.25) !important;
+    color: #eab308 !important;
+}
+.cfg-btn-secondary:hover {
+    background: linear-gradient(135deg, #133d30 0%, #092018 100%) !important;
+    border-color: rgba(234, 168, 40, 0.4) !important;
+    box-shadow: 0 0 10px rgba(234, 168, 40, 0.15);
+}
+
+.cfg-alert-success {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    color: #34d399 !important;
+}
+
+/* ==========================================================================
+    📊 MÓDULO DEL PANEL ESTADÍSTICO / DASHBOARD (.db- Navideño)
+   ========================================================================== */
+
+.db-wrapper {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 20%, #0a2c20 0%, #03120e 80%);
+    color: #baebd1;
+}
+
+/* Tarjetas y Contenedores */
+.db-card {
+    background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
+    border: 1px solid rgba(234, 168, 40, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.db-card-inner {
+    background-color: rgba(4, 18, 14, 0.4);
+    border: 1px solid rgba(234, 168, 40, 0.15);
+}
+
+/* Textos informativos */
+.db-text-muted {
+    color: #8faea0;
+}
+
+.db-text-white {
+    color: var(--text-white);
+}
+
+/* Estados y Colores Dinámicos usando variables del tema activo */
+.db-color-primary {
+    color: #eab308;
+}
+
+.db-color-success {
+    color: #10b981;
+}
+
+.db-color-danger {
+    color: #f87171;
+}
+
+/* Bordes y Divisiones */
+.db-border-split {
+    border-color: rgba(234, 168, 40, 0.15);
+}
+
+/* Enlaces y botones de acción */
+.db-link-action {
+    color: #eab308;
+    text-decoration: none;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.db-link-action:hover {
+    color: #ffe599;
+    text-shadow: 0 0 8px rgba(234, 168, 40, 0.4);
+}
+
+/* Filas de tablas y listas interactivos */
+.db-table-header {
+    background-color: rgba(4, 18, 14, 0.6);
+    border-bottom: 2px solid rgba(234, 168, 40, 0.2);
+    color: #baebd1;
+}
+
+.db-row-hover:hover {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Asegura el borde inferior correcto en cada fila sin interferencias de Tailwind */
+.db-table-row,
+.db-table-row td {
+    border-bottom: 1px solid rgba(234, 168, 40, 0.08) !important;
+}
+
+/* Remueve el borde de la última fila para que no choque con el pie de la tabla */
+.db-table-row:last-child,
+.db-table-row:last-child td {
+    border-bottom: none !important;
+}
+
+/* Insignias de la Tabla (Estados) */
+.db-badge-active {
+    color: #34d399;
+    background-color: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.db-badge-canceled {
+    color: #f87171;
+    background-color: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+/* Estilo para los Top de más vendidos */
+.db-rank-top1 { background-color: rgba(234, 168, 40, 0.15); color: #fde047; border: 1px solid rgba(234, 168, 40, 0.35); box-shadow: 0 0 8px rgba(234, 168, 40, 0.15); }
+.db-rank-top2 { background-color: rgba(143, 174, 160, 0.1); color: #baebd1; border: 1px solid rgba(143, 174, 160, 0.25); }
+.db-rank-top3 { background-color: rgba(180, 83, 9, 0.12); color: #fb923c; border: 1px solid rgba(180, 83, 9, 0.3); }
+
+/* ==========================================================================
+   ✨ EFECTOS MÁGICOS ADICIONALES (Añadir al final de tu CSS Navideño)
+   ========================================================================== */
+
+/* Reemplazo festivo de los emojis por CSS puro sin alterar tu HTML */
+.welcome-body .features-grid .feature-card:nth-child(1) .text-2xl {
+    font-size: 0 !important; /* Oculta el fuego original */
+}
+.welcome-body .features-grid .feature-card:nth-child(1) .text-2xl::before {
+    content: "🍗"; /* Rostizado navideño / Banquete */
+    font-size: 1.5rem;
+}
+
+.welcome-body .features-grid .feature-card:nth-child(2) .text-2xl {
+    font-size: 0 !important; /* Oculta el rayo original */
+}
+.welcome-body .features-grid .feature-card:nth-child(2) .text-2xl::before {
+    content: "🛷"; /* Trineo Express */
+    font-size: 1.5rem;
+}
+
+/* Bordes escarchados y animación interactiva JRPG al pasar el mouse por las tarjetas */
+.welcome-body .feature-card:hover {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.3) !important;
+    transform: translateY(-4px);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Añade un destello estelar flotante extra al título destacado del restaurante */
+.welcome-body .hero-highlight {
+    position: relative;
+}
+.welcome-body .hero-highlight::after {
+    content: " ✨";
+    font-size: 1.2rem;
+    position: absolute;
+    top: -12px;
+    right: -28px;
+    filter: drop-shadow(0 0 5px rgba(234, 168, 40, 0.6));
+}

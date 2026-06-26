@@ -1,0 +1,1761 @@
+/* ==========================================================================
+   🎨 HOJA DE ESTILOS BASE - CONTROL DE DISEÑO CENTRALIZADO
+   ========================================================================== */
+
+:root {
+    /* Paleta de Colores Base (Original de tu app) */
+    --bg-main: #090d16;
+    --bg-sidebar: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.4);
+    --border-color: #1e293b;
+    
+    --color-primary: #22d3ee;        /* Cyan */
+    --color-primary-hover: #0891b2;  /* Cyan oscuro */
+    --color-success: #10b981;        /* Esmeralda */
+    --color-success-hover: #059669;
+
+    --text-main: #f3f4f6;
+    --text-muted: #94a3b8;
+    --text-white: #ffffff;
+}
+
+/* 🚀 Estilos Generales de la Estructura */
+.main-body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+.app-layout {
+    background-color: var(--bg-main);
+}
+
+.main-content {
+    background-color: var(--bg-main);
+}
+
+/* 🧭 Contenedor del Sidebar */
+.main-sidebar {
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+}
+
+/* Título de la Empresa */
+.sidebar-title {
+    color: var(--color-primary);
+}
+
+.fallback-logo {
+    background-color: #1e293b;
+    border: 1px solid var(--border-color);
+}
+
+/* 👥 Tarjeta de Perfil de Usuario */
+.profile-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+.profile-card img {
+    border: 2px solid rgba(34, 211, 238, 0.3);
+}
+
+.profile-avatar {
+    background-image: linear-gradient(to bottom right, #0ea5e9, #2563eb);
+    color: var(--text-white);
+}
+
+.profile-name {
+    color: var(--text-white);
+}
+
+.profile-badge {
+    background-color: rgba(34, 211, 238, 0.1);
+    color: var(--color-primary);
+}
+
+/* 🔗 Enlaces de Navegación */
+.nav-link {
+    background-color: rgba(30, 41, 59, 0.6);
+    color: var(--text-muted);
+}
+
+.nav-link:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--text-white);
+}
+
+/* Enlaces con variantes de éxito (Carrito, Registrar venta, Panel) */
+.nav-link.nav-success:hover {
+    background-color: var(--color-success-hover);
+}
+
+/* 🚪 Botón de Cierre de Sesión */
+.logout-form {
+    border-top: 1px solid var(--border-color);
+}
+
+.logout-btn {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.logout-btn:hover {
+    background-color: #dc2626;
+    color: var(--text-white);
+}
+
+/* Ajustes de scrollbar */
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+}
+
+/* ==========================================================================
+   🏠 VISTA DE BIENVENIDA / LANDING PAGE (La Cabaña)
+   ========================================================================== */
+
+.welcome-body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* 🎆 Luces de Neón de Fondo (Glows) */
+.glow-top {
+    background-color: var(--color-primary);
+    opacity: 0.1;
+}
+
+.glow-bottom {
+    background-color: var(--color-success);
+    opacity: 0.1;
+}
+
+/* 🏷️ Marca / Logotipo */
+.brand-name {
+    background: linear-gradient(to right, var(--color-primary), #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 🔗 Botones y Enlaces del Header */
+.btn-panel {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    color: var(--color-primary);
+}
+
+.btn-panel:hover {
+    background-color: var(--border-color);
+}
+
+.link-login {
+    color: var(--text-muted);
+}
+
+.link-login:hover {
+    color: var(--text-white);
+}
+
+.btn-register {
+    background: linear-gradient(to right, var(--color-success), #f97316);
+    color: var(--bg-main);
+}
+
+.btn-register:hover {
+    background: linear-gradient(to right, var(--color-success-hover), #ea580c);
+}
+
+/* ✨ Elementos del Hero */
+.welcome-badge {
+    background-color: rgba(34, 211, 238, 0.1);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    color: var(--color-primary);
+}
+
+.hero-highlight {
+    background: linear-gradient(to right, #fbbf24, var(--color-success), #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    color: var(--text-muted);
+}
+
+/* 🍽️ Botones del Centro */
+.btn-hero-primary {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.btn-hero-primary:hover {
+    background-color: var(--color-success-hover);
+}
+
+.btn-hero-secondary {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.btn-hero-secondary:hover {
+    color: var(--text-white);
+    background-color: rgba(30, 41, 59, 0.6);
+}
+
+/* 🎴 Tarjetas de Características */
+.features-grid {
+    border-top: 1px solid var(--border-color);
+}
+
+.feature-card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.feature-desc {
+    color: var(--text-muted);
+}
+
+/* 📜 Footer */
+.main-footer {
+    border-top: 1px solid rgba(30, 41, 59, 0.6);
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   🔑 PANTALLAS DE AUTENTICACIÓN (Login / Registro)
+   ========================================================================== */
+
+.auth-body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* 🎇 Destello de Fondo */
+.auth-glow {
+    background-color: var(--color-success);
+    opacity: 0.08;
+}
+
+/* 🏷️ Identidad de Marca */
+.auth-brand-name {
+    background: linear-gradient(to right, var(--color-success), #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.auth-title {
+    color: var(--text-white);
+}
+
+.auth-subtitle {
+    color: var(--text-muted);
+}
+
+/* 🎴 Tarjeta del Formulario */
+.auth-card {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+}
+
+/* 🏷️ Etiquetas y Elementos de Formulario */
+.auth-label {
+    color: var(--text-muted);
+}
+
+.auth-input {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+/* ⚡ Enfoque / Focus en Campos */
+.auth-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+/* ⚠️ Caja de Errores de Laravel */
+.auth-errors-box {
+    background-color: rgba(225, 29, 72, 0.1);
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    color: #f43f5e;
+}
+
+/* 🚀 Botón de Enviar */
+.auth-btn-submit {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.auth-btn-submit:hover {
+    background-color: var(--color-success-hover);
+}
+
+/* 🔗 Textos y Enlaces inferiores */
+.auth-footer-text {
+    color: var(--text-muted);
+}
+
+.auth-link {
+    color: var(--color-primary);
+}
+
+.auth-link:hover {
+    color: var(--text-white);
+}
+
+/* 🔗 Enlaces internos específicos del Login */
+.auth-link-forgot {
+    color: var(--color-primary);
+    opacity: 0.8;
+}
+
+.auth-link-forgot:hover {
+    opacity: 1;
+}
+
+/* 🔘 Checkbox Recordarme */
+.auth-checkbox {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.auth-checkbox:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.auth-label-checkbox {
+    color: var(--text-muted);
+}
+
+/* 🚀 Botón de ingreso estilo Primario (Cyan/Acento) */
+.auth-btn-primary {
+    background-color: var(--color-primary);
+    color: var(--bg-main);
+}
+
+.auth-btn-primary:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--text-white);
+}
+
+/* 🔗 Enlace inferior para registrarse */
+.auth-link-alt {
+    color: var(--color-success);
+}
+
+.auth-link-alt:hover {
+    color: var(--text-white);
+}
+
+/* ✨ Caja de Estado Exitoso (Ej: Enlace de recuperación enviado) */
+.auth-status-box {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+/* ==========================================================================
+   🛠️ PANEL DE ADMINISTRACIÓN (Listado de Productos)
+   ========================================================================== */
+
+.admin-wrapper {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* 🎴 Tarjetas Generales */
+.admin-card {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+}
+
+.admin-title {
+    color: var(--text-white);
+}
+
+.admin-subtitle {
+    color: var(--text-muted);
+}
+
+/* 🚀 Botón de Agregar (Éxito) */
+.admin-btn-success {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.admin-btn-success:hover {
+    background-color: var(--color-success-hover);
+}
+
+/* ✨ Mensajes de éxito */
+.admin-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+/* 📊 Tabla de Datos */
+.admin-table-th-row {
+    border-color: var(--border-color);
+    background-color: rgba(0, 0, 0, 0.15);
+    color: var(--text-muted);
+}
+
+.admin-table-row {
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.admin-table-row:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* 🖼️ Miniaturas de Imágenes */
+.admin-img-container {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.admin-img-placeholder {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 88, 12, 0.15));
+}
+
+/* 🏷️ Badges y Precios */
+.admin-badge-unit {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.admin-text-price {
+    color: var(--color-success);
+}
+
+/* 📦 Alertas de Inventario / Stock */
+.admin-stock-normal {
+    color: #10b981; /* Verde esmeralda estable */
+}
+
+.admin-stock-critical {
+    color: #f43f5e; /* Rosa/Rojo de advertencia */
+    font-weight: bold;
+}
+
+/* ⚙️ Botones de Acciones (Editar / Eliminar) */
+.admin-action-btn {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.admin-action-btn.btn-edit {
+    color: var(--color-primary);
+}
+
+.admin-action-btn.btn-edit:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(6, 182, 212, 0.05);
+}
+
+.admin-action-btn.btn-delete {
+    color: #f43f5e;
+}
+
+.admin-action-btn.btn-delete:hover {
+    border-color: #f43f5e;
+    background-color: rgba(244, 63, 94, 0.05);
+}
+
+.admin-table-empty {
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   🚨 REPARACIÓN COMPLETA DEL SIDEBAR (Para corregir las capturas adjuntas)
+   ========================================================================== */
+
+/* Contenedor del Perfil de Usuario */
+.sidebar-user-card {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* Botones de menú de la barra lateral */
+.sidebar-nav-link {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 1rem;
+    padding: 0.85rem 1.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar-nav-link:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(6, 182, 212, 0.05);
+    color: var(--text-white);
+}
+
+
+/* ==========================================================================
+   🏪 MÓDULO DE CAJA REGISTRADORA Y VENTAS (POS)
+   ========================================================================== */
+
+.pos-wrapper {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+.pos-card {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+}
+
+.pos-main-title {
+    color: var(--text-white);
+}
+
+.pos-section-title {
+    color: var(--text-muted);
+}
+
+.pos-subtitle, .pos-helper-text {
+    color: var(--text-muted);
+}
+
+/* 🔄 selectores y pestañas (Tabs) */
+.pos-tabs-container {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.tab-active-cyan {
+    background-color: rgba(6, 182, 212, 0.1);
+    color: var(--color-primary);
+    border-color: rgba(6, 182, 212, 0.3);
+}
+
+.tab-active-amber {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--color-secondary);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.tab-inactive {
+    color: var(--text-muted);
+    border-color: transparent;
+}
+
+.tab-inactive:hover {
+    color: var(--text-white);
+}
+
+/* 🔍 Custom Selector & Dropdown */
+.pos-select-trigger {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-white);
+}
+
+.pos-select-trigger:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pos-placeholder-text {
+    color: var(--text-muted);
+}
+
+.pos-dropdown-menu {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+}
+
+.pos-dropdown-search-box {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.pos-dropdown-input {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+    color: var(--text-white);
+}
+
+.pos-dropdown-input:focus {
+    border-color: var(--color-primary);
+}
+
+.pos-option-row {
+    border-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+}
+
+.pos-option-row:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.pos-option-img-box {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.pos-option-name {
+    color: var(--text-white);
+}
+
+.pos-option-meta {
+    color: var(--text-muted);
+}
+
+/* 📥 Campos de Entrada y Botones */
+.pos-input, .pos-input-nested {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-white);
+}
+
+.pos-input:focus, .pos-input-nested:focus {
+    border-color: var(--color-primary);
+}
+
+.pos-input-monto {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--color-secondary);
+}
+
+.pos-btn-add {
+    background-color: var(--color-primary);
+    color: var(--bg-main);
+}
+
+.pos-btn-add:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* 📊 Tablas de Consumo */
+.pos-table-header {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: var(--border-color);
+}
+
+.pos-table-th-row {
+    border-color: var(--border-color);
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-muted);
+}
+
+.pos-table-tbody {
+    border-color: var(--border-color);
+}
+
+.pos-table-row-injected:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.pos-text-row-subtotal {
+    color: var(--color-primary);
+}
+
+.pos-btn-remove-row {
+    color: #f43f5e;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.pos-table-empty {
+    color: var(--text-muted);
+}
+
+/* 💰 Checkout & Totales */
+.pos-totals-box {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.pos-totals-divider {
+    border-color: var(--border-color);
+}
+
+.pos-text-total {
+    color: var(--color-success);
+}
+
+.pos-btn-invoice {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.pos-btn-invoice:hover {
+    background-color: var(--color-success-hover);
+}
+
+/* 📦 Automatización e Inversiones */
+.pos-automation-box {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.pos-text-brand {
+    color: var(--color-secondary);
+}
+
+.pos-btn-action {
+    background-color: var(--color-secondary);
+    color: var(--bg-main);
+}
+
+.pos-btn-action:hover {
+    background-color: var(--color-secondary-hover);
+}
+
+/* 🚨 Alertas */
+.pos-alert-danger {
+    background-color: rgba(244, 63, 94, 0.1);
+    border-color: rgba(244, 63, 94, 0.2);
+    color: #f43f5e;
+}
+
+.pos-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+/* ==========================================================================
+   👥 MÓDULO DE GESTIÓN DE USUARIOS (Formulario de Registro)
+   ========================================================================== */
+
+.usr-wrapper {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+.usr-card {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+}
+
+.usr-main-title {
+    color: var(--text-white);
+}
+
+.usr-subtitle, .usr-helper-text {
+    color: var(--text-muted);
+}
+
+.usr-label {
+    color: var(--text-muted);
+}
+
+/* 📥 Campos de Entrada (Inputs y Selects) */
+.usr-input {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-white);
+}
+
+.usr-input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.usr-input:focus {
+    border-color: var(--color-primary);
+}
+
+/* ❌ Textos de Error de Validación */
+.usr-text-error {
+    color: #f43f5e;
+}
+
+/* 📐 Líneas Divisoras y Sub-contenedores */
+.usr-divider-top {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.usr-divider-bottom {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.usr-subcard {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: var(--border-color);
+}
+
+.usr-preview-box {
+    background-color: var(--bg-main);
+    border-color: rgba(255, 255, 255, 0.04);
+}
+
+.usr-avatar-placeholder {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+/* 🔄 Switcher / Toggle de tipo de Imagen */
+.usr-toggle-container {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.usr-toggle-container .toggle-active {
+    background-color: var(--color-primary);
+    color: var(--bg-main);
+}
+
+.usr-toggle-container .toggle-inactive {
+    color: var(--text-muted);
+}
+
+.usr-toggle-container .toggle-inactive:hover {
+    color: var(--text-white);
+}
+
+/* 📁 Personalización del Input File Nativo */
+.usr-file-input {
+    color: var(--text-muted);
+}
+
+.usr-file-input::file-selector-button {
+    background-color: var(--bg-sidebar);
+    color: var(--color-primary);
+    transition: background-color 0.2s ease;
+}
+
+.usr-file-input::file-selector-button:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 🔘 Botones de Guardar / Cancelar */
+.usr-btn-cancel {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.usr-btn-cancel:hover {
+    color: var(--text-white);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.usr-btn-submit {
+    background-color: var(--color-primary);
+    color: var(--bg-main);
+}
+
+.usr-btn-submit:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* === Extensiones para el Listado de Usuarios (Index) === */
+
+/* 🟢 Alerta de Éxito */
+.usr-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+/* 🔍 Barra de Búsqueda */
+.usr-search-box {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.usr-search-box:focus-within {
+    border-color: var(--color-primary);
+}
+
+.usr-search-icon {
+    color: var(--text-muted);
+}
+
+/* 📊 Componentes de la Tabla */
+.usr-table-container {
+    border-color: var(--border-color);
+}
+
+.usr-table-header {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.usr-table-body {
+    background-color: rgba(15, 23, 42, 0.2); /* Sutil opacidad sobre el fondo principal */
+}
+
+.usr-table-row {
+    border-color: rgba(30, 41, 59, 0.5);
+}
+
+.usr-table-row:hover {
+    background-color: rgba(30, 41, 59, 0.3);
+}
+
+.usr-id-text {
+    color: rgba(148, 163, 184, 0.6);
+}
+
+/* 👤 Avatares en la Tabla */
+.usr-avatar-ring {
+    border-color: rgba(148, 163, 184, 0.2);
+    box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+}
+
+.usr-avatar-default {
+    background: linear-gradient(135deg, var(--color-primary), #2563eb);
+}
+
+/* 🏷️ Badges de Roles */
+.usr-badge-admin {
+    background-color: rgba(34, 211, 238, 0.1);
+    color: var(--color-primary);
+    border-color: rgba(34, 211, 238, 0.2);
+}
+
+.usr-badge-client {
+    background-color: var(--border-color);
+    color: var(--text-muted);
+    border-color: rgba(148, 163, 184, 0.1);
+}
+
+/* 🎛️ Botones de Acción (Iconos en Tabla) */
+.usr-action-btn {
+    background-color: var(--bg-main);
+}
+
+.usr-action-btn.btn-edit {
+    color: var(--color-primary);
+}
+
+.usr-action-btn.btn-edit:hover {
+    background-color: var(--color-primary);
+    color: var(--bg-main);
+}
+
+.usr-action-btn.btn-delete {
+    color: #f43f5e;
+}
+
+.usr-action-btn.btn-delete:hover {
+    background-color: #f43f5e;
+    color: var(--text-white);
+}
+
+/* 📑 Paginación unificada con las Variables CSS */
+.usr-pagination .pagination {
+    margin-bottom: 0 !important;
+    gap: 4px;
+    display: flex;
+}
+
+.usr-pagination .page-link {
+    background-color: var(--bg-main) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-muted) !important;
+    border-radius: 10px !important;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.85rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.usr-pagination .page-item.active .page-link {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--bg-main) !important;
+    font-weight: bold;
+}
+
+.usr-pagination .page-link:hover {
+    background-color: var(--border-color) !important;
+    color: var(--text-white) !important;
+}
+
+/* === Ajustes del Formulario de Edición y Creación === */
+
+.usr-label {
+    color: var(--text-muted);
+}
+
+.usr-highlight {
+    color: var(--color-primary);
+}
+
+.usr-error-text {
+    color: #f43f5e; /* Tono rojizo para errores */
+}
+
+.usr-photo-section {
+    background-color: rgba(15, 23, 42, 0.2);
+    border-color: rgba(30, 41, 59, 0.6);
+}
+
+.usr-photo-preview-box {
+    background-color: var(--bg-main);
+    border-color: rgba(255, 255, 255, 0.04);
+}
+
+.usr-divider-bottom {
+    border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+}
+
+.usr-btn-cancel {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.usr-btn-cancel:hover {
+    color: var(--text-white);
+    border-color: rgba(148, 163, 184, 0.4);
+}
+
+/* ==========================================================================
+   🚚 MÓDULO DE GESTIÓN DE PROVEEDORES (prv-)
+   ========================================================================== */
+
+.prv-wrapper {
+    background-color: var(--bg-main);
+}
+
+.prv-card {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+}
+
+.prv-main-title {
+    color: var(--text-white);
+}
+
+.prv-subtitle {
+    color: var(--text-muted);
+}
+
+.prv-label {
+    color: var(--text-muted);
+}
+
+.prv-input {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-white);
+}
+
+.prv-input::placeholder {
+    color: #334155; /* slate-700 aproximado para guías tenues */
+}
+
+.prv-input:focus {
+    border-color: var(--color-success);
+}
+
+.prv-photo-section {
+    background-color: rgba(15, 23, 42, 0.2);
+    border-color: rgba(30, 41, 59, 0.6);
+}
+
+.prv-photo-preview-box {
+    background-color: var(--bg-main);
+    border-color: rgba(255, 255, 255, 0.04);
+}
+
+.prv-avatar-placeholder {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+    color: #475569; /* slate-600 */
+}
+
+.prv-divider-top {
+    border-top: 1px solid rgba(30, 41, 59, 0.6);
+}
+
+.prv-divider-bottom {
+    border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+}
+
+.prv-error-text {
+    color: #f43f5e;
+}
+
+.prv-btn-cancel {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.prv-btn-cancel:hover {
+    color: var(--text-white);
+    border-color: rgba(148, 163, 184, 0.4);
+}
+
+.prv-btn-submit {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.prv-btn-submit:hover {
+    background-color: var(--color-success-hover);
+}
+
+/* --- Extensiones para la Vista de Listado (Index) --- */
+
+.prv-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+.prv-search-container {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.prv-search-container:focus-within {
+    border-color: var(--color-success);
+}
+
+.prv-search-icon {
+    color: #475569; /* slate-600 aproximado */
+}
+
+.prv-search-input {
+    color: var(--text-white);
+}
+
+.prv-search-input::placeholder {
+    color: #334155; /* slate-700 */
+}
+
+.prv-table-border {
+    border-color: var(--border-color);
+}
+
+.prv-table-header {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.prv-table-body {
+    background-color: rgba(15, 23, 42, 0.3); /* Capa slate-900/50 semitransparente */
+}
+
+/* Sobreescribe el divisor nativo de Tailwind para que se adapte al tema oscuro */
+.divide-y.prv-table-divide > :not([hidden]) ~ :not([hidden]) {
+    border-color: rgba(30, 41, 59, 0.4) !important;
+}
+
+.prv-table-row {
+    color: var(--text-main);
+}
+
+.prv-table-row:hover {
+    background-color: rgba(30, 41, 59, 0.3); /* sutil realce en hover */
+}
+
+.prv-id-cell {
+    color: #475569; /* slate-600 */
+}
+
+.prv-avatar-box {
+    background-color: var(--bg-main);
+    border-color: rgba(71, 85, 105, 0.5);
+}
+
+.prv-avatar-icon {
+    color: var(--color-success);
+}
+
+.prv-company-title {
+    color: var(--text-white);
+}
+
+.prv-contact-text {
+    color: var(--text-main);
+}
+
+.prv-mono-text {
+    color: var(--text-muted);
+}
+
+.prv-info-text {
+    color: var(--text-muted);
+}
+
+.prv-empty-icon {
+    color: #334155; /* slate-700 */
+}
+
+/* Acciones y botones de fila */
+.prv-action-btn {
+    background-color: var(--bg-main);
+}
+
+.prv-edit-btn {
+    color: var(--color-success);
+}
+
+.prv-edit-btn:hover {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.prv-delete-btn {
+    color: #f43f5e; /* Red-400 */
+}
+
+.prv-delete-btn:hover {
+    background-color: #f43f5e;
+    color: var(--text-white);
+}
+
+
+/* --- Estilos de Paginación Centralizados para Proveedores --- */
+
+.prv-pagination-container .pagination {
+    margin-bottom: 0 !important;
+    gap: 4px;
+    display: flex;
+}
+
+.prv-pagination-container .page-link {
+    background-color: var(--bg-main) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-muted) !important;
+    border-radius: 10px !important;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.85rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.prv-pagination-container .page-item.active .page-link {
+    background-color: var(--color-success) !important;
+    border-color: var(--color-success) !important;
+    color: var(--bg-main) !important;
+    font-weight: bold;
+}
+
+.prv-pagination-container .page-link:hover {
+    background-color: var(--border-color) !important;
+    color: var(--text-white) !important;
+}
+
+/* 📁 Personalización del Input de Archivos para Proveedores */
+.prv-file-input {
+    color: var(--text-muted) !important;
+    background-color: transparent !important;
+}
+
+.prv-file-input::file-selector-button {
+    background-color: var(--bg-sidebar) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--color-success) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 12px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.prv-file-input::file-selector-button:hover {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    border-color: var(--color-success) !important;
+}
+
+/* ==========================================================================
+   🏷️ EXTENSIONES PARA EL MÓDULO DE CATEGORÍAS (CAT-)
+   ========================================================================== */
+
+.cat-wrapper {
+    background-color: var(--bg-main);
+}
+
+.cat-card {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+}
+
+.cat-main-title {
+    color: var(--text-white);
+}
+
+.cat-subtitle {
+    color: var(--text-muted);
+}
+
+.cat-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+/* 🔍 Input de Búsqueda */
+.cat-search-container {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.cat-search-container:focus-within {
+    border-color: var(--color-success);
+}
+
+.cat-search-icon {
+    color: #475569; /* slate-600 */
+}
+
+.cat-search-input {
+    color: var(--text-white);
+}
+
+.cat-search-input::placeholder {
+    color: #334155; /* slate-700 */
+}
+
+/* 📊 Estilos de Tabla y Filas */
+.cat-table-border {
+    border-color: var(--border-color);
+}
+
+.cat-table-header {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.cat-table-body {
+    background-color: rgba(15, 23, 42, 0.3); /* Capa semitransparente */
+}
+
+.cat-table-body tr {
+    border-bottom: 1px solid rgba(30, 41, 59, 0.4); /* Línea divisoria suave corregida */
+    color: var(--text-main);
+}
+
+.cat-table-body tr:last-child {
+    border-bottom: none;
+}
+
+.cat-table-row:hover {
+    background-color: rgba(30, 41, 59, 0.3);
+}
+
+.cat-id-cell {
+    color: #475569;
+}
+
+.cat-name-cell {
+    color: var(--text-white);
+}
+
+.cat-empty-icon {
+    color: #334155;
+}
+
+/* 🏷️ Badges de Estado */
+.cat-badge-active {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+.cat-badge-inactive {
+    background-color: var(--border-color);
+    border-color: rgba(71, 85, 105, 0.4);
+    color: var(--text-muted);
+}
+
+/* ⚡ Botones de Acción */
+.cat-action-btn {
+    background-color: var(--bg-main);
+}
+
+.cat-edit-btn {
+    color: var(--color-success);
+}
+
+.cat-edit-btn:hover {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.cat-delete-btn {
+    color: #f43f5e; /* Red-400 */
+}
+
+.cat-delete-btn:hover {
+    background-color: #f43f5e;
+    color: var(--text-white);
+}
+
+.cat-btn-submit {
+    background-color: var(--color-success);
+    color: var(--bg-main);
+}
+
+.cat-btn-submit:hover {
+    background-color: var(--color-success-hover);
+    color: var(--bg-main);
+}
+
+/* 🔄 Líneas divisorias generales y Paginación */
+.cat-divider-top {
+    border-top: 1px solid var(--border-color);
+}
+
+.cat-pagination-container .pagination {
+    margin-bottom: 0 !important;
+    gap: 4px;
+    display: flex;
+}
+
+.cat-pagination-container .page-link {
+    background-color: var(--bg-main) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-muted) !important;
+    border-radius: 10px !important;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.85rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cat-pagination-container .page-item.active .page-link {
+    background-color: var(--color-success) !important;
+    border-color: var(--color-success) !important;
+    color: var(--bg-main) !important;
+    font-weight: bold;
+}
+
+.cat-pagination-container .page-link:hover {
+    background-color: var(--border-color) !important;
+    color: var(--text-white) !important;
+}
+
+/* 📝 Componentes de Formulario para Categorías */
+.cat-input {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-white);
+}
+
+.cat-input::placeholder {
+    color: #334155; /* slate-600 */
+}
+
+.cat-input:focus {
+    border-color: var(--color-success);
+}
+
+.cat-error-text {
+    color: #f43f5e; /* Red-400 */
+}
+
+.cat-btn-cancel {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.cat-btn-cancel:hover {
+    color: var(--text-white);
+    border-color: #334155;
+}
+
+/* ==========================================================================
+   🧾 MODULO: HISTORIAL DE VENTAS Y MOVIMIENTOS DE CAJA (.his-)
+   ========================================================================== */
+
+.his-wrapper {
+    background-color: var(--bg-main);
+}
+
+.his-card {
+    background-color: var(--bg-sidebar); 
+    border-color: var(--border-color);
+}
+
+.his-main-title { color: var(--text-white); }
+.his-subtitle { color: var(--text-muted); }
+.his-text-white { color: var(--text-white); }
+.his-text-muted { color: var(--text-muted); }
+
+.his-badge {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+/* 🎛️ Selectores Dinámicos de Filtros (Alpine.js States) */
+.his-filter-inactive {
+    border-color: var(--border-color);
+    background-color: rgba(9, 13, 22, 0.4);
+}
+.his-filter-inactive:hover {
+    border-color: #334155; 
+}
+
+.his-filter-active-facturas {
+    border-color: rgba(34, 211, 238, 0.4); 
+    background-color: var(--bg-main);
+    --tw-ring-color: rgba(34, 211, 238, 0.2);
+}
+
+.his-filter-active-gastos {
+    border-color: rgba(245, 158, 11, 0.4); 
+    background-color: var(--bg-main);
+    --tw-ring-color: rgba(245, 158, 11, 0.2);
+}
+
+.his-filter-active-ingresos {
+    border-color: rgba(168, 85, 247, 0.4); 
+    background-color: var(--bg-main);
+    --tw-ring-color: rgba(168, 85, 247, 0.2);
+}
+
+/* 🎨 Semántica de Estados Financieros y Badges */
+.his-text-success { color: var(--color-success); }     
+.his-text-warning { color: #f59e0b; }                   
+.his-text-accent  { color: #c084fc; }                   
+.his-text-danger  { color: #f43f5e; }                   
+
+.his-container-anulado {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+}
+
+.his-status-active-bg { background-color: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
+.his-status-active-dot { background-color: var(--color-success); }
+
+.his-status-inactive-bg { background-color: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.2); }
+.his-status-inactive-dot { background-color: #f43f5e; }
+
+.his-status-warning-bg { background-color: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
+.his-status-accent-bg { background-color: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2); }
+
+.his-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: var(--color-success);
+}
+
+.his-btn-action {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+.his-btn-action:hover {
+    background-color: #1e293b;
+    color: #f59e0b; 
+}
+
+.his-btn-danger {
+    background-color: rgba(244, 63, 94, 0.1);
+    border-color: rgba(244, 63, 94, 0.2);
+    color: #f43f5e;
+}
+.his-btn-danger:hover {
+    background-color: rgba(244, 63, 94, 0.3);
+    color: #ffe4e6;
+}
+
+/* ==========================================================================
+   ⚙️ MÓDULO DE CONFIGURACIÓN DEL SISTEMA (.cfg-)
+   ========================================================================== */
+
+.cfg-wrapper {
+    background-color: var(--bg-main);
+}
+
+.cfg-card {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-color);
+}
+
+.cfg-input {
+    background-color: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+.cfg-input:focus {
+    border-color: var(--color-primary);
+}
+
+/* 🎭 Selector de Temas Visuales (Radio Cards) */
+.cfg-theme-card {
+    background-color: rgba(9, 13, 22, 0.4);
+    border: 1px solid rgba(30, 41, 59, 0.8);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover general de las opciones */
+.cfg-theme-label:hover .cfg-theme-card {
+    border-color: rgba(148, 163, 184, 0.4);
+}
+
+.cfg-theme-label:hover .cfg-theme-title {
+    color: var(--color-primary);
+}
+
+/* ⚡ Estado SELECCIONADO (peer-checked) controlado por CSS puro */
+.cfg-radio-input:checked + .cfg-theme-card {
+    border-color: var(--color-primary) !important;
+    background-color: rgba(34, 211, 238, 0.05) !important; /* Opacidad sutil del color primario */
+}
+
+/* Expansión del círculo interno cuando el tema está activo */
+.cfg-radio-input:checked + .cfg-theme-card .cfg-dot-inner {
+    transform: scale(1);
+}
+
+.cfg-radio-input:checked + .cfg-theme-card .cfg-dot-outer {
+    border-color: var(--color-primary);
+}
+
+/* Componentes internos del indicador circular */
+.cfg-dot-outer {
+    border: 2px solid var(--border-color);
+    transition: border-color 0.2s ease;
+}
+
+.cfg-dot-inner {
+    background-color: var(--color-primary);
+    transform: scale(0);
+    transition: transform 0.2s ease;
+}
+
+/* Botón principal de guardado */
+.cfg-btn-submit {
+    background-color: var(--color-primary);
+    color: var(--bg-main);
+}
+
+.cfg-btn-submit:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--text-white);
+}
+
+/* Nuevas Clases Colectoras - Tema Base */
+.cfg-inner-box {
+    background-color: rgba(9, 13, 22, 0.5);
+    border-color: rgba(30, 41, 59, 0.6);
+}
+
+.cfg-btn-secondary {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    color: #ffffff;
+}
+.cfg-btn-secondary:hover {
+    background-color: #1e293b;
+}
+
+.cfg-alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #10b981;
+}
+/* ==========================================================================
+   📊 MÓDULO DEL PANEL ESTADÍSTICO / DASHBOARD (.db-)
+   ========================================================================== */
+
+.db-wrapper {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* Tarjetas y Contenedores */
+.db-card {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+}
+
+.db-card-inner {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+}
+
+/* Textos informativos */
+.db-text-muted {
+    color: var(--text-muted);
+}
+
+.db-text-white {
+    color: var(--text-white);
+}
+
+/* Estados y Colores Dinámicos usando variables del tema activo */
+.db-color-primary {
+    color: var(--color-primary);
+}
+
+.db-color-success {
+    color: var(--color-success);
+}
+
+.db-color-danger {
+    color: #f43f5e; /* Mantenemos una paleta armónica o var(--color-danger) si existe */
+}
+
+/* Bordes y Divisiones */
+.db-border-split {
+    border-color: rgba(30, 41, 59, 0.6);
+}
+
+/* Enlaces y botones de acción */
+.db-link-action {
+    color: var(--color-primary);
+    transition: color 0.2s ease;
+}
+
+.db-link-action:hover {
+    color: var(--color-primary-hover);
+}
+
+/* Filas de tablas y listas interactivos */
+.db-table-header {
+    background-color: rgba(9, 13, 22, 0.5);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.db-row-hover:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+/* Asegura el borde inferior correcto en cada fila sin interferencias de Tailwind */
+.db-table-row {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Opcional: Remueve el borde de la última fila para que no choque con el pie de la tabla */
+.db-table-row:last-child {
+    border-bottom: none;
+}
+/* Insignias de la Tabla (Estados) */
+.db-badge-active {
+    color: var(--color-success);
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.db-badge-canceled {
+    color: #f43f5e;
+    background-color: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+/* Estilo para los Top de más vendidos */
+.db-rank-top1 { background-color: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
+.db-rank-top2 { background-color: rgba(148, 163, 184, 0.1); color: #94a3b8; border-color: rgba(148, 163, 184, 0.3); }
+.db-rank-top3 { background-color: rgba(249, 115, 22, 0.1); color: #f97316; border-color: rgba(249, 115, 22, 0.3); }
