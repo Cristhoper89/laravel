@@ -66,10 +66,10 @@
     </div>
 
     <div class="header-ticket text-center">
-        <h2>TUCOMIDA RESTAURANTE</h2>
-        <p>NIT: 901.234.567-1</p>
-        <p>Calle Principal #12 - 34, Pereira</p>
-        <p>Tel: (606) 321-4567</p>
+        <h2>{{ $empresaGlobal->name ?? 'TUTIENDA' }}</h2>
+        <p>NIT: {{ $empresaGlobal->NIT ?? 'NIT no disponible' }}</p>
+        <p>{{ $empresaGlobal->address ?? 'Dirección no disponible' }}</p>
+        <p>Tel: {{ $empresaGlobal->contact ?? 'Teléfono no disponible' }}</p>
     </div>
 
     <div class="linea"></div>

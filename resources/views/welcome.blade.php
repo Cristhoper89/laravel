@@ -73,7 +73,7 @@
         <!-- Título de Impacto -->
         <h1 class="text-5xl md:text-7xl font-black tracking-tight text-white mb-6 max-w-3xl leading-tight">
             Descubre el auténtico sabor de <span
-                class="hero-highlight">{{ $empresaGlobal->name ?? 'La Cabaña' }}</span>
+                class="hero-highlight">{{ $empresaGlobal->name ?? 'TUTIENDA' }}</span>
         </h1>
 
         <p class="hero-subtitle text-base md:text-xl max-w-2xl mb-10 leading-relaxed">
