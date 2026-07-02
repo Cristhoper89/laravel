@@ -78,6 +78,11 @@
                         @endif
 
                         @if (auth()->user()->role === 'admin')
+                            <!-- MENÚ CORREGIDO: Redirección directa al index de caja -->
+                            <a href="{{ route('caja.index') }}" class="nav-link flex items-center gap-3 p-3 rounded-xl transition duration-200 font-medium text-sm">
+                                <span>🏦</span> Control de Caja
+                            </a>
+
                             <a href="{{ route('admin.ventas.create') }}" class="nav-link nav-success flex items-center gap-3 p-3 rounded-xl transition duration-200 font-medium text-sm">
                                 <span>🛒</span> Registrar Venta (Caja)
                             </a>

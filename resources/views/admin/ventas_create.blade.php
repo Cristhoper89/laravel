@@ -10,7 +10,7 @@
                     </div>
 
                     <div class="pos-tabs-container border p-1.5 rounded-2xl gap-1 shrink-0 flex">
-                        <button @click="tab = 'venta'"
+                        <button @click="tab = 'venta'; setTimeout(() => document.getElementById('barcode-scanner-input')?.focus(), 100)"
                             :class="tab === 'venta' ? 'tab-active-cyan font-bold' : 'tab-inactive'"
                             class="px-4 py-2 text-xs uppercase tracking-wider border rounded-xl transition duration-200 flex items-center gap-1.5">
                             🛒 Caja Directa
@@ -36,14 +36,23 @@
                 </div>
             @endif
 
+            <!-- PESTAÑA: CAJA DIRECTA -->
             <div x-show="tab === 'venta'" x-transition>
+                <!-- CAMPO ESPÍA PARA CAPTURAR ESCÁNER -->
+                <input type="text" id="barcode-scanner-input" class="absolute opacity-0 w-0 h-0 pointer-events-none" autofocus autocomplete="off">
+
                 <form action="{{ route('admin.ventas.store') }}" method="POST">
                     @csrf
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                         <div class="lg:col-span-2 space-y-6">
                             <div class="pos-card border rounded-3xl p-6 shadow-xl">
-                                <h3 class="pos-section-title text-sm font-bold uppercase tracking-wider mb-4">Agregar Productos a la Orden</h3>
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                                    <h3 class="pos-section-title text-sm font-bold uppercase tracking-wider">Agregar Productos a la Orden</h3>
+                                    <span class="inline-flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-2.5 py-1 rounded-lg text-[11px] font-medium tracking-wide animate-pulse">
+                                        ⚡ Lector Activo (Dispara en cualquier momento)
+                                    </span>
+                                </div>
                                 <div class="flex flex-col lg:flex-row gap-4 items-end sm:items-stretch">
 
                                     <div class="flex-1 relative">
@@ -62,7 +71,7 @@
                                             <div class="overflow-y-auto flex-1 divide-y" id="options-container">
                                                 @foreach ($productos as $prod)
                                                     <div class="option-item flex items-center gap-3 px-4 py-2.5 cursor-pointer pos-option-row transition text-sm"
-                                                        data-value="{{ $prod->id }}" data-precio="{{ $prod->price }}" data-stock="{{ $prod->stock }}" data-name="{{ $prod->name }}">
+                                                        data-value="{{ $prod->id }}" data-precio="{{ $prod->price }}" data-stock="{{ $prod->stock }}" data-name="{{ $prod->name }}" data-barcode="{{ $prod->barcode ?? '' }}">
 
                                                         <div class="w-10 h-10 rounded-lg pos-option-img-box border flex items-center justify-center overflow-hidden shrink-0">
                                                             @if ($prod->image || $prod->imagen)
@@ -77,7 +86,7 @@
                                                         <div class="flex-1 min-w-0">
                                                             <p class="pos-option-name font-medium truncate">{{ $prod->name }}</p>
                                                             <p class="text-xs pos-option-meta font-mono">
-                                                                ${{ number_format($prod->price, 2) }} <span>|</span> Stock: {{ $prod->stock }}
+                                                                ${{ number_format($prod->price, 2) }} <span>|</span> Stock: {{ $prod->stock }} @if($prod->barcode) <span>|</span> 🏷️ {{ $prod->barcode }} @endif
                                                             </p>
                                                         </div>
                                                     </div>
@@ -177,6 +186,7 @@
                 </form>
             </div>
 
+            <!-- PESTAÑA: MOVIMIENTO -->
             <div x-show="tab === 'movimiento'" x-transition class="hidden" :class="{ 'hidden': tab !== 'movimiento' }">
                 <div class="pos-card border rounded-3xl p-8 shadow-xl" x-data="{ tipo: 'egreso', concepto: 'pago_proveedor' }">
 
@@ -283,9 +293,112 @@
 
         const movProveedor = document.getElementById('movProveedor');
         const movProducto = document.getElementById('movProducto');
+        
+        // Elemento espía para capturar escáner
+        const barcodeScannerInput = document.getElementById('barcode-scanner-input');
 
         let productoSeleccionadoData = null;
 
+        // Mantener el foco en el input espía para escaneos continuos, excepto si se está editando otro input válido
+        function focusScanner() {
+            const activeEl = document.activeElement;
+            const inputsIgnorados = ['search-producto', 'cantidad-producto', 'user_id', 'metodo_pago', 'proveedor_id', 'producto_id', 'cantidad_producto', 'monto', 'descripcion'];
+            
+            if (activeEl && inputsIgnorados.includes(activeEl.id) || activeEl.name && inputsIgnorados.includes(activeEl.name)) {
+                return;
+            }
+            // Solo enfocar si estamos en la pestaña de venta
+            const wrapper = document.querySelector('.pos-wrapper');
+            if (wrapper && wrapper.__x && wrapper.__x.$data.tab === 'venta') {
+                barcodeScannerInput?.focus();
+            }
+        }
+
+        // Enfocar al inicio y recuperar foco tras hacer clics vagos en la pantalla
+        setTimeout(focusScanner, 200);
+        document.addEventListener('click', () => setTimeout(focusScanner, 150));
+
+        // Lógica de captura y procesamiento del Código de Barras
+        barcodeScannerInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Evitar cualquier submit indeseado por el Enter automático del lector
+                
+                const scannedCode = this.value.trim();
+                this.value = ''; // Limpiar de inmediato para la siguiente lectura
+                
+                if (scannedCode === '') return;
+
+                // Buscar el elemento en la lista que coincida con el atributo data-barcode
+                const matchedOption = optionsContainer.querySelector(`.option-item[data-barcode="${scannedCode}"]`);
+
+                if (matchedOption) {
+                    const id = matchedOption.getAttribute('data-value');
+                    const name = matchedOption.getAttribute('data-name');
+                    const precio = parseFloat(matchedOption.getAttribute('data-precio'));
+                    const stock = parseInt(matchedOption.getAttribute('data-stock'));
+
+                    // Forzar la inyección directa al Detalle del Consumo (Cantidad fija de 1 por lectura)
+                    inyectarProductoDirecto(id, name, precio, stock, 1);
+                } else {
+                    alert(`Código de barras "${scannedCode}" no asociado a ningún producto.`);
+                }
+            }
+        });
+
+        // Función Modularizada para Inyectar a Detalle Consumo directamente
+        function inyectarProductoDirecto(prodId, prodNombre, prodPrecio, prodStock, cantidad) {
+            if (prodStock <= 0) {
+                alert(`El producto "${prodNombre}" no cuenta con stock disponible.`);
+                return;
+            }
+
+            if (filaVacia && contenedorItems.contains(filaVacia)) filaVacia.remove();
+
+            const filaExistente = document.querySelector(`tr[data-product-id="${prodId}"]`);
+            if (filaExistente) {
+                const inputCantExistente = filaExistente.querySelector('.input-cantidad-oculto');
+                let nuevaCant = parseInt(inputCantExistente.value) + cantidad;
+
+                if (nuevaCant > prodStock) {
+                    alert(`Al acumular las unidades de "${prodNombre}" superas el stock disponible (${prodStock}).`);
+                    return;
+                }
+
+                inputCantExistente.value = nuevaCant;
+                filaExistente.querySelector('.txt-cantidad').textContent = nuevaCant;
+                filaExistente.querySelector('.txt-subtotal-fila').textContent = `$${(prodPrecio * nuevaCant).toFixed(2)}`;
+                calcularGranTotal();
+                return;
+            }
+
+            const subtotalFila = prodPrecio * cantidad;
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.setAttribute('data-product-id', prodId);
+            nuevaFila.className = "pos-table-row-injected transition duration-150 struct-item-row";
+
+            nuevaFila.innerHTML = `
+                <td class="py-4 px-6 font-bold text-white">
+                    ${prodNombre}
+                    <input type="hidden" class="input-id-oculto" value="${prodId}">
+                </td>
+                <td class="py-4 px-6 text-center font-mono pos-helper-text">$${prodPrecio.toFixed(2)}</td>
+                <td class="py-4 px-6 text-center">
+                    <span class="txt-cantidad font-bold text-white">${cantidad}</span>
+                    <input type="hidden" value="${cantidad}" class="input-cantidad-oculto">
+                </td>
+                <td class="py-4 px-6 text-right font-bold pos-text-row-subtotal font-mono txt-subtotal-fila">$${subtotalFila.toFixed(2)}</td>
+                <td class="py-4 px-6 text-center">
+                    <button type="button" class="pos-btn-remove-row transition btn-eliminar-fila">❌</button>
+                </td>
+            `;
+
+            contenedorItems.appendChild(nuevaFila);
+
+            reindexarProductos();
+            calcularGranTotal();
+        }
+
+        // select trigger interactividad estándar manual
         selectTrigger.addEventListener('click', function(e) {
             e.stopPropagation();
             selectDropdown.classList.toggle('hidden');
@@ -335,84 +448,38 @@
             optionsContainer.querySelectorAll('.option-item').forEach(item => item.style.setProperty('display', 'flex', 'important'));
         });
 
+        // Botón agregar manual
         btnAgregar.addEventListener('click', function() {
             if (!productoSeleccionadoData || !hiddenInputProducto.value) {
                 alert('Por favor, selecciona un producto válido de la lista.');
                 return;
             }
 
-            const prodId = productoSeleccionadoData.id;
-            const prodNombre = productoSeleccionadoData.name;
-            const prodPrecio = productoSeleccionadoData.precio;
-            const prodStock = productoSeleccionadoData.stock;
             const cantidad = parseInt(inputCantidad.value);
-
             if (cantidad <= 0 || isNaN(cantidad)) {
                 alert('La cantidad debe ser mayor a cero.');
                 return;
             }
 
-            if (cantidad > prodStock) {
-                alert(`Stock insuficiente. Solo quedan ${prodStock} unidades de este producto.`);
-                return;
-            }
-
-            if (filaVacia) filaVacia.remove();
-
-            const filaExistente = document.querySelector(`tr[data-product-id="${prodId}"]`);
-            if (filaExistente) {
-                const inputCantExistente = filaExistente.querySelector('.input-cantidad-oculto');
-                let nuevaCant = parseInt(inputCantExistente.value) + cantidad;
-
-                if (nuevaCant > prodStock) {
-                    alert(`Al acumular las unidades superas el stock disponible (${prodStock}).`);
-                    return;
-                }
-
-                inputCantExistente.value = nuevaCant;
-                filaExistente.querySelector('.txt-cantidad').textContent = nuevaCant;
-                filaExistente.querySelector('.txt-subtotal-fila').textContent = `$${(prodPrecio * nuevaCant).toFixed(2)}`;
-                calcularGranTotal();
-                return;
-            }
-
-            const subtotalFila = prodPrecio * cantidad;
-            const nuevaFila = document.createElement('tr');
-            nuevaFila.setAttribute('data-product-id', prodId);
-            nuevaFila.className = "pos-table-row-injected transition duration-150 struct-item-row";
-
-            nuevaFila.innerHTML = `
-                <td class="py-4 px-6 font-bold text-white">
-                    ${prodNombre}
-                    <input type="hidden" class="input-id-oculto" value="${prodId}">
-                </td>
-                <td class="py-4 px-6 text-center font-mono pos-helper-text">$${prodPrecio.toFixed(2)}</td>
-                <td class="py-4 px-6 text-center">
-                    <span class="txt-cantidad font-bold text-white">${cantidad}</span>
-                    <input type="hidden" value="${cantidad}" class="input-cantidad-oculto">
-                </td>
-                <td class="py-4 px-6 text-right font-bold pos-text-row-subtotal font-mono txt-subtotal-fila">$${subtotalFila.toFixed(2)}</td>
-                <td class="py-4 px-6 text-center">
-                    <button type="button" class="pos-btn-remove-row transition btn-eliminar-fila">❌</button>
-                </td>
-            `;
-
-            contenedorItems.appendChild(nuevaFila);
+            inyectarProductoDirecto(
+                productoSeleccionadoData.id,
+                productoSeleccionadoData.name,
+                productoSeleccionadoData.precio,
+                productoSeleccionadoData.stock,
+                cantidad
+            );
 
             hiddenInputProducto.value = "";
             placeholderText.textContent = "-- Selecciona un producto --";
             placeholderText.className = "pos-placeholder-text";
             inputCantidad.value = "1";
             productoSeleccionadoData = null;
-
-            reindexarProductos();
-            calcularGranTotal();
         });
 
         contenedorItems.addEventListener('click', function(e) {
             if (e.target.classList.contains('btn-eliminar-fila')) {
                 e.target.closest('tr').remove();
-                if (contenedorItems.children.length === 0) {
+                if (contenedorItems.querySelectorAll('.struct-item-row').length === 0) {
                     contenedorItems.appendChild(filaVacia);
                 }
                 reindexarProductos();

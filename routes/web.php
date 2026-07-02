@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminVentaController;
 use App\Http\Controllers\MovimientoCajaController;
 use App\Http\Controllers\Admin\ConfiguracionController;
+use App\Http\Controllers\CajaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -106,6 +107,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('admin.configuracion.index');
     Route::post('/configuracion/empresa', [ConfiguracionController::class, 'updateEmpresa'])->name('admin.configuracion.empresa');
     Route::post('/configuracion/estilo', [ConfiguracionController::class, 'updateEstilo'])->name('admin.configuracion.estilo');
+    //caja
+    Route::get('/caja', [CajaController::class, 'index'])->name('caja.index');
+    Route::get('/caja/verificar-huella', [CajaController::class, 'verificarHuella']);
+    Route::post('/caja/validar-contrasena', [CajaController::class, 'validarContrasena']);
+    Route::get('/caja/desafio-registro', [CajaController::class, 'obtenerDesafioRegistro']);
+    Route::post('/caja/guardar-huella', [CajaController::class, 'guardarHuella']);
+    Route::get('/caja/desafio-autenticacion', [CajaController::class, 'obtenerDesafioAutenticacion']);
+    Route::post('/caja/procesar', [CajaController::class, 'procesarCaja']);
+    Route::prefix('caja')->name('caja.')->group(function () {
+        Route::post('/procesar', [CajaController::class, 'procesarCaja'])->name('procesar');
+        Route::post('/validar-contrasena', [CajaController::class, 'validarContrasena']);
+    });
 });
 
 

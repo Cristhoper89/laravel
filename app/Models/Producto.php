@@ -12,6 +12,7 @@ class Producto extends Model
     // Columnas permitidas para inserción masiva (Mass Assignment)
     protected $fillable = [
         'name',
+        'barcode',
         'supplier_id',  // Cambiado
         'category_id',  // Agregado
         'unit_of_measurement',
