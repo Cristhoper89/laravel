@@ -1,145 +1,168 @@
 <x-app-layout>
-    <div class="min-h-screen bg-slate-950 py-10">
+    <!-- Contenedor principal con fondo unificado del panel -->
+    <div class="min-h-screen admin-wrapper py-10">
         <div class="max-w-3xl mx-auto px-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl">
-                <h3 class="text-2xl font-bold text-white mb-6">Nuevo Platillo 🍳</h3>
-                
-                <form action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-    @csrf
-    
-    <div>
-        <label class="block text-slate-400 mb-2 text-sm font-medium">Nombre del producto</label>
-        <input type="text" name="name" value="{{ old('name') }}" placeholder="Ej. Hamburguesa Especial"
-               class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-white focus:outline-none focus:border-amber-500 transition duration-200" required>
-        @error('name')
-            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
+            <!-- Tarjeta del Formulario usando .admin-card -->
+            <div class="admin-card border rounded-3xl p-8 shadow-xl">
+                <h3 class="text-2xl font-bold admin-title mb-6">Nuevo Platillo 🍳</h3>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <label class="block text-slate-400 mb-2 text-sm font-medium">Proveedor 🚚</label>
-            <select name="supplier_id" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-slate-300 focus:outline-none focus:border-amber-500 transition duration-200" required>
-                <option value="" disabled selected>Selecciona un proveedor</option>
-                @foreach($proveedores as $proveedor)
-                    <option value="{{ $proveedor->id }}" {{ old('supplier_id') == $proveedor->id ? 'selected' : '' }}>
-                        {{ $proveedor->company_name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('supplier_id')
-                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+                <form action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data"
+                    class="space-y-6">
+                    @csrf
 
-        <div>
-            <label class="block text-slate-400 mb-2 text-sm font-medium">Categoría 🏷️</label>
-            <select name="category_id" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-slate-300 focus:outline-none focus:border-amber-500 transition duration-200" required>
-                <option value="" disabled selected>Selecciona una categoría</option>
-                @foreach($categorias as $categoria)
-                    <option value="{{ $categoria->id }}" {{ old('category_id') == $categoria->id ? 'selected' : '' }}>
-                        {{ $categoria->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('category_id')
-                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-    </div>
+                    <!-- Nombre del Producto -->
+                    <div>
+                        <label class="block admin-subtitle mb-2 text-sm font-medium">Nombre del producto</label>
+                        <!-- Usamos .usr-input para mantener la coherencia estética de las cajas de texto -->
+                        <input type="text" name="name" value="{{ old('name') }}"
+                            placeholder="Ej. Hamburguesa Especial"
+                            class="w-full usr-input border rounded-2xl p-3 focus:outline-none transition duration-200"
+                            required>
+                        @error('name')
+                            <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-    <div>
-        <label class="block text-slate-400 mb-2 text-sm font-medium">Unidad de Medida</label>
-        <select name="unit_of_measurement" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-slate-300 focus:outline-none focus:border-amber-500 transition duration-200">
-            <option value="Unidad" {{ old('unit_of_measurement') == 'Unidad' ? 'selected' : '' }}>Unidad</option>
-            <option value="Porción" {{ old('unit_of_measurement') == 'Porción' ? 'selected' : '' }}>Porción</option>
-            <option value="Lata" {{ old('unit_of_measurement') == 'Lata' ? 'selected' : '' }}>Lata</option>
-            <option value="Kilogramo" {{ old('unit_of_measurement') == 'Kilogramo' ? 'selected' : '' }}>Kilogramo</option>
-        </select>
-        @error('unit_of_measurement')
-            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
+                    <!-- Proveedor y Categoría -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block admin-subtitle mb-2 text-sm font-medium">Proveedor 🚚</label>
+                            <select name="supplier_id"
+                                class="w-full usr-input border rounded-2xl p-3 focus:outline-none transition duration-200"
+                                required>
+                                <option value="" disabled selected>Selecciona un proveedor</option>
+                                @foreach ($proveedores as $proveedor)
+                                    <option value="{{ $proveedor->id }}"
+                                        {{ old('supplier_id') == $proveedor->id ? 'selected' : '' }}>
+                                        {{ $proveedor->company_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('supplier_id')
+                                <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <label class="block text-slate-400 mb-2 text-sm font-medium">Precio ($)</label>
-            <input type="number" step="0.01" name="price" value="{{ old('price') }}" placeholder="0.00"
-                   class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-white focus:outline-none focus:border-amber-500 transition duration-200" required>
-            @error('price')
-                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-        <div>
-            <label class="block text-slate-400 mb-2 text-sm font-medium">Cantidad en Stock</label>
-            <input type="number" name="stock" value="{{ old('stock') }}" placeholder="0"
-                   class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-white focus:outline-none focus:border-amber-500 transition duration-200" required>
-            @error('stock')
-                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-    </div>
+                        <div>
+                            <label class="block admin-subtitle mb-2 text-sm font-medium">Categoría 🏷️</label>
+                            <select name="category_id"
+                                class="w-full usr-input border rounded-2xl p-3 focus:outline-none transition duration-200"
+                                required>
+                                <option value="" disabled selected>Selecciona una categoría</option>
+                                @foreach ($categorias as $categoria)
+                                    <option value="{{ $categoria->id }}"
+                                        {{ old('category_id') == $categoria->id ? 'selected' : '' }}>
+                                        {{ $categoria->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
 
-    <div class="bg-slate-950/40 border border-slate-800/80 rounded-2xl p-4 space-y-4" 
-     x-data="{ tipoImagen: '{{ old('image') && filter_var(old('image'), FILTER_VALIDATE_URL) ? 'url' : 'file' }}' }">
-    
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/60 pb-3 gap-2">
-        <div>
-            <label class="block text-slate-400 text-sm font-medium">Imagen del Producto 🖼️</label>
-            <p class="text-slate-500 text-[11px] mt-0.5">Selecciona cómo deseas cargar la imagen del platillo.</p>
-        </div>
-        
-        <div class="flex bg-slate-950 border border-slate-800 p-1 rounded-xl gap-1 self-start sm:self-auto">
-            <button type="button" @click="tipoImagen = 'file'"
-                    :class="tipoImagen === 'file' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-slate-200'"
-                    class="px-3 py-1.5 text-xs rounded-lg transition duration-200">
-                📁 Archivo Local
-            </button>
-            <button type="button" @click="tipoImagen = 'url'"
-                    :class="tipoImagen === 'url' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-slate-200'"
-                    class="px-3 py-1.5 text-xs rounded-lg transition duration-200">
-                🌐 Enlace URL
-            </button>
-        </div>
-    </div>
+                    <!-- Unidad de Medida -->
+                    <div>
+                        <label class="block admin-subtitle mb-2 text-sm font-medium">Unidad de Medida</label>
+                        <select name="unit_of_measurement"
+                            class="w-full usr-input border rounded-2xl p-3 focus:outline-none transition duration-200">
+                            <option value="Unidad" {{ old('unit_of_measurement') == 'Unidad' ? 'selected' : '' }}>Unidad</option>
+                            <option value="Porción" {{ old('unit_of_measurement') == 'Porción' ? 'selected' : '' }}>Porción</option>
+                            <option value="Lata" {{ old('unit_of_measurement') == 'Lata' ? 'selected' : '' }}>Lata</option>
+                            <option value="Kilogramo" {{ old('unit_of_measurement') == 'Kilogramo' ? 'selected' : '' }}>Kilogramo</option>
+                        </select>
+                        @error('unit_of_measurement')
+                            <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-    <div class="flex flex-col sm:flex-row items-center gap-4 bg-slate-950 p-4 rounded-xl border border-slate-900">
-        
-        <div class="flex-1 w-full">
-            <div x-show="tipoImagen === 'file'" x-transition>
-                <p class="text-[11px] text-slate-500 mb-2">Sube un archivo nuevo desde tu computadora.</p>
-                <input type="file" 
-                       :name="tipoImagen === 'file' ? 'image' : ''" 
-                       class="w-full text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-slate-900 file:text-amber-400 hover:file:bg-slate-800 transition duration-200">
-            </div>
+                    <!-- Precio y Stock -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block admin-subtitle mb-2 text-sm font-medium">Precio ($)</label>
+                            <input type="number" step="0.01" name="price" value="{{ old('price') }}"
+                                placeholder="0.00"
+                                class="w-full usr-input border rounded-2xl p-3 focus:outline-none transition duration-200"
+                                required>
+                            @error('price')
+                                <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block admin-subtitle mb-2 text-sm font-medium">Cantidad en Stock</label>
+                            <input type="number" name="stock" value="{{ old('stock') }}" placeholder="0"
+                                class="w-full usr-input border rounded-2xl p-3 focus:outline-none transition duration-200"
+                                required>
+                            @error('stock')
+                                <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
 
-            <div x-show="tipoImagen === 'url'" x-transition class="hidden" :class="{ 'hidden': tipoImagen !== 'url' }">
-                <p class="text-[11px] text-slate-500 mb-2">Pega la dirección URL directa de la imagen de internet.</p>
-                <input type="url" 
-                       :name="tipoImagen === 'url' ? 'image' : ''"
-                       value="{{ old('image') && filter_var(old('image'), FILTER_VALIDATE_URL) ? old('image') : '' }}" 
-                       placeholder="https://ejemplo.com/imagenes/platillo.jpg"
-                       class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-amber-500 transition duration-200 text-sm">
-            </div>
-            
-            @error('image')
-                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-    </div>
-</div>
+                    <!-- Sección de la Imagen con Alpine.js -->
+                    <div class="usr-photo-section border rounded-2xl p-4 space-y-4"
+                        x-data="{ tipoImagen: '{{ old('image') && filter_var(old('image'), FILTER_VALIDATE_URL) ? 'url' : 'file' }}' }">
 
-    <div class="flex justify-end gap-4 pt-4 border-t border-slate-800/60">
-        <a href="{{ route('admin.dashboard') }}" 
-           class="bg-slate-950 border border-slate-800 text-slate-400 px-6 py-3 rounded-2xl hover:text-white hover:border-slate-700 transition duration-200 no-underline text-sm flex items-center">
-            Cancelar
-        </a>
-        <button type="submit" 
-                class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-2xl transition duration-200 shadow-md text-sm">
-            Guardar Platillo
-        </button>
-    </div>
-</form>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between usr-divider-bottom pb-3 gap-2">
+                            <div>
+                                <label class="block admin-subtitle text-sm font-medium">Imagen del Producto 🖼️</label>
+                                <p class="admin-subtitle text-[11px] mt-0.5">Selecciona cómo deseas cargar la imagen del platillo.</p>
+                            </div>
+
+                            <!-- Selector de tipo (File / URL) adaptado al diseño unificado -->
+                            <div class="flex usr-toggle-container border p-1 rounded-xl gap-1 self-start sm:self-auto">
+                                <button type="button" @click="tipoImagen = 'file'"
+                                    :class="tipoImagen === 'file' ? 'toggle-active font-bold' : 'toggle-inactive'"
+                                    class="px-3 py-1.5 text-xs rounded-lg transition duration-200">
+                                    📁 Archivo Local
+                                </button>
+                                <button type="button" @click="tipoImagen = 'url'"
+                                    :class="tipoImagen === 'url' ? 'toggle-active font-bold' : 'toggle-inactive'"
+                                    class="px-3 py-1.5 text-xs rounded-lg transition duration-200">
+                                    🌐 Enlace URL
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center gap-4 usr-preview-box p-4 rounded-xl border">
+                            <div class="flex-1 w-full">
+                                <!-- Input File Nativo adaptado -->
+                                <div x-show="tipoImagen === 'file'" x-transition>
+                                    <p class="text-[11px] admin-subtitle mb-2">Sube un archivo nuevo desde tu computadora.</p>
+                                    <input type="file" :name="tipoImagen === 'file' ? 'image' : ''"
+                                        class="w-full usr-file-input text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold transition duration-200">
+                                </div>
+
+                                <!-- Input URL -->
+                                <div x-show="tipoImagen === 'url'" x-transition class="hidden"
+                                    :class="{ 'hidden': tipoImagen !== 'url' }">
+                                    <p class="text-[11px] admin-subtitle mb-2">Pega la dirección URL directa de la imagen de internet.</p>
+                                    <input type="url" :name="tipoImagen === 'url' ? 'image' : ''"
+                                        value="{{ old('image') && filter_var(old('image'), FILTER_VALIDATE_URL) ? old('image') : '' }}"
+                                        placeholder="https://ejemplo.com/imagenes/platillo.jpg"
+                                        class="w-full usr-input border rounded-xl p-2.5 focus:outline-none transition duration-200 text-sm">
+                                </div>
+
+                                @error('image')
+                                    <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción Finales -->
+                    <div class="flex justify-end gap-4 pt-4 usr-divider-top">
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="usr-btn-cancel border px-6 py-3 rounded-2xl transition duration-200 no-underline text-sm flex items-center">
+                            Cancelar
+                        </a>
+                        <button type="submit"
+                            class="admin-btn-success font-bold px-6 py-3 rounded-2xl transition duration-200 shadow-md text-sm">
+                            Guardar Platillo
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

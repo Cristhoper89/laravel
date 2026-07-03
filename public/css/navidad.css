@@ -578,7 +578,7 @@
 .pos-card {
     background: linear-gradient(135deg, rgba(14, 46, 36, 0.65) 0%, rgba(5, 20, 15, 0.75) 100%);
     border: 1px solid rgba(234, 168, 40, 0.18);
-    backdrop-filter: blur(8px);
+    backdrop-filter: none;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
@@ -654,6 +654,12 @@
 }
 
 .pos-dropdown-menu {
+    position: absolute; /* Asegura que flote sobre el diseño */
+    z-index: 50;        /* Lo posiciona al frente de las tarjetas inferiores */
+    width: 100%;        /* Mantiene el ancho alineado al contenedor */
+    left: 0;
+    margin-top: 0.25rem;
+
     background: #061c16;
     border: 1px solid rgba(234, 168, 40, 0.25);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
@@ -676,7 +682,9 @@
 }
 
 .pos-option-row {
-    border-bottom: 1px solid rgba(234, 168, 40, 0.08);
+    border-bottom: 0 !important;
+    border-top: 0 !important;
+    box-shadow: none !important;
     color: #f8fafc;
 }
 
@@ -1007,7 +1015,7 @@
 }
 
 .usr-table-body {
-    background-color: rgba(4, 18, 14, 0.25);
+    background-color: #04120e !important;
 }
 
 .usr-table-row {
@@ -1249,7 +1257,7 @@
 }
 
 .prv-table-body {
-    background-color: rgba(4, 18, 14, 0.25);
+    background-color: #04120e !important;
 }
 
 /* Forzar la eliminación de la línea blanca heredada de Tailwind */
@@ -1431,7 +1439,7 @@
 }
 
 .cat-table-body {
-    background-color: rgba(4, 18, 14, 0.25);
+    background-color: #04120e !important;
 }
 
 .cat-table-body tr,

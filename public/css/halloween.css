@@ -4,25 +4,38 @@
 
 :root {
     /* Atmósfera Halloween: Fondo Violeta/Negro de Noche de Brujas */
-    --bg-main: #09070f;               /* Negro con matiz místico */
-    --bg-sidebar: #120e1c;            /* Morado oscuro para paneles */
-    --bg-card: rgba(26, 19, 41, 0.55); /* Cristal esmerilado sombrío */
-    --border-color: rgba(249, 115, 22, 0.18); /* Brillo de calabaza translúcido */
-    
+    --bg-main: #09070f;
+    /* Negro con matiz místico */
+    --bg-sidebar: #120e1c;
+    /* Morado oscuro para paneles */
+    --bg-card: rgba(26, 19, 41, 0.55);
+    /* Cristal esmerilado sombrío */
+    --border-color: rgba(249, 115, 22, 0.18);
+    /* Brillo de calabaza translúcido */
+
     /* Colores del Espíritu de Noche de Brujas */
-    --color-primary: #f97316;         /* Naranja Calabaza Vibrante */
-    --color-primary-hover: #fb923c;   /* Naranja Fuego Resplandeciente */
-    --color-success: #22c55e;         /* Verde Ectoplasma / Ácido */
-    --color-success-hover: #4ade80;   /* Verde Veneno Brillante */
+    --color-primary: #f97316;
+    /* Naranja Calabaza Vibrante */
+    --color-primary-hover: #fb923c;
+    /* Naranja Fuego Resplandeciente */
+    --color-success: #22c55e;
+    /* Verde Ectoplasma / Ácido */
+    --color-success-hover: #4ade80;
+    /* Verde Veneno Brillante */
 
     /* Textos de Ultratumba */
-    --text-main: #f1f5f9;             /* Blanco Hueso limpio */
-    --text-muted: #948ea3;            /* Gris lavanda sombrío */
-    --text-white: #ffffff;            /* Blanco Puro */
+    --text-main: #f1f5f9;
+    /* Blanco Hueso limpio */
+    --text-muted: #948ea3;
+    /* Gris lavanda sombrío */
+    --text-white: #ffffff;
+    /* Blanco Puro */
 }
 
 /* 🚀 Estilos Generales de la Estructura (Resplandor de neón místico en el centro) */
-.main-body, .app-layout, .main-content {
+.main-body,
+.app-layout,
+.main-content {
     background-color: var(--bg-main);
     background-image: radial-gradient(circle at 50% 30%, #1c1331 0%, #09070f 75%);
     color: var(--text-main);
@@ -133,12 +146,14 @@
 
 /* 🎆 Resplandores de Fondo transformados en Aura de Hechizo */
 .glow-top {
-    background-color: #f97316; /* Aura Naranja */
+    background-color: #f97316;
+    /* Aura Naranja */
     opacity: 0.06;
 }
 
 .glow-bottom {
-    background-color: #a855f7; /* Aura Morada */
+    background-color: #a855f7;
+    /* Aura Morada */
     opacity: 0.06;
 }
 
@@ -481,7 +496,8 @@
 }
 
 .admin-text-price {
-    color: #f97316; /* Precio resaltado en Naranja */
+    color: #f97316;
+    /* Precio resaltado en Naranja */
     font-weight: 700;
 }
 
@@ -504,7 +520,8 @@
 }
 
 .admin-action-btn.btn-edit {
-    color: #fdba74; /* Tono calabaza claro */
+    color: #fdba74;
+    /* Tono calabaza claro */
 }
 
 .admin-action-btn.btn-edit:hover {
@@ -572,7 +589,7 @@
 .pos-card {
     background: linear-gradient(135deg, rgba(35, 25, 56, 0.65) 0%, rgba(14, 10, 23, 0.75) 100%);
     border: 1px solid rgba(249, 115, 22, 0.18);
-    backdrop-filter: blur(8px);
+    backdrop-filter: none;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
@@ -588,7 +605,8 @@
     font-weight: 600;
 }
 
-.pos-subtitle, .pos-helper-text {
+.pos-subtitle,
+.pos-helper-text {
     color: #948ea3;
 }
 
@@ -661,8 +679,10 @@
 }
 
 .pos-option-row {
-    border-bottom: 1px solid rgba(249, 115, 22, 0.08);
-    color: #f1f5f9;
+    border-bottom: 0 !important;
+    border-top: 0 !important;
+    box-shadow: none !important;
+    color: #f8fafc;
 }
 
 .pos-option-row:hover {
@@ -683,13 +703,15 @@
 }
 
 /* 📥 Campos de Entrada y Botones */
-.pos-input, .pos-input-nested {
+.pos-input,
+.pos-input-nested {
     background-color: rgba(9, 7, 15, 0.6) !important;
     border: 1px solid rgba(249, 115, 22, 0.2) !important;
     color: var(--text-white) !important;
 }
 
-.pos-input:focus, .pos-input-nested:focus {
+.pos-input:focus,
+.pos-input-nested:focus {
     border-color: #f97316 !important;
     box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2) !important;
 }
@@ -838,7 +860,8 @@
     font-weight: 800;
 }
 
-.usr-subtitle, .usr-helper-text {
+.usr-subtitle,
+.usr-helper-text {
     color: #948ea3;
 }
 
@@ -1238,7 +1261,7 @@
 }
 
 /* Forzar la eliminación de la línea blanca heredada de Tailwind */
-.divide-y.prv-table-divide > :not([hidden]) ~ :not([hidden]),
+.divide-y.prv-table-divide> :not([hidden])~ :not([hidden]),
 .prv-table-row,
 .prv-table-row td {
     border-color: rgba(249, 115, 22, 0.08) !important;
@@ -1571,9 +1594,17 @@
     font-weight: 800;
 }
 
-.his-subtitle { color: #948ea3; }
-.his-text-white { color: var(--text-white); }
-.his-text-muted { color: #948ea3; }
+.his-subtitle {
+    color: #948ea3;
+}
+
+.his-text-white {
+    color: var(--text-white);
+}
+
+.his-text-muted {
+    color: #948ea3;
+}
 
 .his-badge {
     background-color: rgba(9, 7, 15, 0.4);
@@ -1587,51 +1618,86 @@
     background-color: rgba(9, 7, 15, 0.4);
     color: #948ea3;
 }
+
 .his-filter-inactive:hover {
     border-color: rgba(249, 115, 22, 0.35);
     color: var(--text-white);
 }
 
 .his-filter-active-facturas {
-    border-color: #22d3ee !important; 
+    border-color: #22d3ee !important;
     background-color: rgba(9, 7, 15, 0.7) !important;
     color: #22d3ee !important;
     box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
 }
 
 .his-filter-active-gastos {
-    border-color: #f59e0b !important; 
+    border-color: #f59e0b !important;
     background-color: rgba(9, 7, 15, 0.7) !important;
     color: #f59e0b !important;
     box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
 }
 
 .his-filter-active-ingresos {
-    border-color: #a855f7 !important; 
+    border-color: #a855f7 !important;
     background-color: rgba(9, 7, 15, 0.7) !important;
     color: #a855f7 !important;
     box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
 }
 
 /* 🎨 Semántica de Estados Financieros y Badges */
-.his-text-success { color: #22c55e; }     
-.his-text-warning { color: #f59e0b; }                   
-.his-text-accent  { color: #c084fc; }                   
-.his-text-danger  { color: #f43f5e; }                   
+.his-text-success {
+    color: #22c55e;
+}
+
+.his-text-warning {
+    color: #f59e0b;
+}
+
+.his-text-accent {
+    color: #c084fc;
+}
+
+.his-text-danger {
+    color: #f43f5e;
+}
 
 .his-container-anulado {
     background-color: rgba(9, 7, 15, 0.5);
     border: 1px solid rgba(249, 115, 22, 0.15);
 }
 
-.his-status-active-bg { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.25); color: #86efac; }
-.his-status-active-dot { background-color: #22c55e; }
+.his-status-active-bg {
+    background-color: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: #86efac;
+}
 
-.his-status-inactive-bg { background-color: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); color: #fda4af; }
-.his-status-inactive-dot { background-color: #f43f5e; }
+.his-status-active-dot {
+    background-color: #22c55e;
+}
 
-.his-status-warning-bg { background-color: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); color: #fde047; }
-.his-status-accent-bg { background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.25); color: #e9d5ff; }
+.his-status-inactive-bg {
+    background-color: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.25);
+    color: #fda4af;
+}
+
+.his-status-inactive-dot {
+    background-color: #f43f5e;
+}
+
+.his-status-warning-bg {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    color: #fde047;
+}
+
+.his-status-accent-bg {
+    background-color: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    color: #e9d5ff;
+}
 
 .his-alert-success {
     background-color: rgba(34, 197, 94, 0.1);
@@ -1644,9 +1710,10 @@
     border: 1px solid rgba(249, 115, 22, 0.15);
     color: #948ea3;
 }
+
 .his-btn-action:hover {
     background-color: rgba(249, 115, 22, 0.1);
-    color: #f97316; 
+    color: #f97316;
 }
 
 .his-btn-danger {
@@ -1654,6 +1721,7 @@
     border: 1px solid rgba(244, 63, 94, 0.2);
     color: #f43f5e;
 }
+
 .his-btn-danger:hover {
     background-color: rgba(244, 63, 94, 0.25);
     color: #ffe4e6;
@@ -1704,18 +1772,18 @@
 }
 
 /* ⚡ Estado SELECCIONADO (peer-checked) controlado por CSS puro */
-.cfg-radio-input:checked + .cfg-theme-card {
+.cfg-radio-input:checked+.cfg-theme-card {
     border-color: #a855f7 !important;
     background-color: rgba(168, 85, 247, 0.08) !important;
     box-shadow: 0 0 14px rgba(168, 85, 247, 0.25);
 }
 
 /* Expansión del círculo interno cuando el tema está activo */
-.cfg-radio-input:checked + .cfg-theme-card .cfg-dot-inner {
+.cfg-radio-input:checked+.cfg-theme-card .cfg-dot-inner {
     transform: scale(1);
 }
 
-.cfg-radio-input:checked + .cfg-theme-card .cfg-dot-outer {
+.cfg-radio-input:checked+.cfg-theme-card .cfg-dot-outer {
     border-color: #a855f7;
 }
 
@@ -1755,6 +1823,7 @@
     border: 1px solid rgba(249, 115, 22, 0.25) !important;
     color: #f97316 !important;
 }
+
 .cfg-btn-secondary:hover {
     background: linear-gradient(135deg, #281c47 0%, #120e21 100%) !important;
     border-color: rgba(249, 115, 22, 0.4) !important;
@@ -1764,7 +1833,8 @@
 .cfg-alert-success {
     background-color: rgba(168, 85, 247, 0.12) !important;
     border-color: rgba(168, 85, 247, 0.35) !important;
-    color: #c084fc !important; /* En Halloween, el éxito se viste de magia violeta */
+    color: #c084fc !important;
+    /* En Halloween, el éxito se viste de magia violeta */
 }
 
 /* ==========================================================================
@@ -1865,9 +1935,24 @@
 }
 
 /* Estilo para los Top de más vendidos */
-.db-rank-top1 { background-color: rgba(249, 115, 22, 0.15); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.35); box-shadow: 0 0 8px rgba(249, 115, 22, 0.2); }
-.db-rank-top2 { background-color: rgba(168, 85, 247, 0.1); color: #e9d5ff; border: 1px solid rgba(168, 85, 247, 0.25); }
-.db-rank-top3 { background-color: rgba(34, 211, 238, 0.12); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3); }
+.db-rank-top1 {
+    background-color: rgba(249, 115, 22, 0.15);
+    color: #f97316;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.2);
+}
+
+.db-rank-top2 {
+    background-color: rgba(168, 85, 247, 0.1);
+    color: #e9d5ff;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.db-rank-top3 {
+    background-color: rgba(34, 211, 238, 0.12);
+    color: #22d3ee;
+    border: 1px solid rgba(34, 211, 238, 0.3);
+}
 
 /* ==========================================================================
    🔮 EFECTOS MÁGICOS DE HALLOWEEN (Añadir al final de tu halloween.css)
@@ -1875,18 +1960,24 @@
 
 /* Reemplazo de los emojis originales por unos de terror culinario */
 .welcome-body .features-grid .feature-card:nth-child(1) .text-2xl {
-    font-size: 0 !important; /* Oculta el fuego */
+    font-size: 0 !important;
+    /* Oculta el fuego */
 }
+
 .welcome-body .features-grid .feature-card:nth-child(1) .text-2xl::before {
-    content: "🧙‍♀️"; /* Caldero de bruja / Ingredientes mágicos */
+    content: "🧙‍♀️";
+    /* Caldero de bruja / Ingredientes mágicos */
     font-size: 1.5rem;
 }
 
 .welcome-body .features-grid .feature-card:nth-child(2) .text-2xl {
-    font-size: 0 !important; /* Oculta el rayo */
+    font-size: 0 !important;
+    /* Oculta el rayo */
 }
+
 .welcome-body .features-grid .feature-card:nth-child(2) .text-2xl::before {
-    content: "⚰️"; /* Envío rápido / "De muerte" */
+    content: "⚰️";
+    /* Envío rápido / "De muerte" */
     font-size: 1.5rem;
 }
 
@@ -1894,6 +1985,7 @@
 .welcome-body .hero-highlight {
     position: relative;
 }
+
 .welcome-body .hero-highlight::after {
     content: " 🦇";
     font-size: 1.2rem;

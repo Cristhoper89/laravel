@@ -5,7 +5,10 @@
             <div class="pos-card border rounded-3xl p-6 shadow-xl mb-8">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 class="pos-main-title text-3xl font-black tracking-tight">🏪 <span>Caja Registradora y Finanzas</span></h2>
+                        {{-- Corrección de estructura para evitar que el degradado CSS oculte el emoji --}}
+                        <h2 class="pos-main-title text-3xl font-black tracking-tight">
+                            🏪 <span>Caja Registradora y Finanzas</span>
+                        </h2>
                         <p class="pos-subtitle text-sm mt-1">Administra los flujos de dinero de la empresa en una sola interfaz.</p>
                     </div>
 
@@ -187,7 +190,8 @@
             </div>
 
             <!-- PESTAÑA: MOVIMIENTO -->
-            <div x-show="tab === 'movimiento'" x-transition class="hidden" :class="{ 'hidden': tab !== 'movimiento' }">
+            {{-- Removido 'hidden' nativo para evitar conflictos con x-show de Alpine --}}
+            <div x-show="tab === 'movimiento'" x-transition :class="{ 'hidden': tab !== 'movimiento' }">
                 <div class="pos-card border rounded-3xl p-8 shadow-xl" x-data="{ tipo: 'egreso', concepto: 'pago_proveedor' }">
 
                     <form action="{{ route('admin.movimientos.store') }}" method="POST" class="space-y-6">
@@ -275,6 +279,7 @@
         </div>
     </div>
 
+    {{-- Script JS intacto... --}}
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const selectTrigger = document.getElementById('custom-select-trigger');
@@ -294,12 +299,10 @@
         const movProveedor = document.getElementById('movProveedor');
         const movProducto = document.getElementById('movProducto');
         
-        // Elemento espía para capturar escáner
         const barcodeScannerInput = document.getElementById('barcode-scanner-input');
 
         let productoSeleccionadoData = null;
 
-        // Mantener el foco en el input espía para escaneos continuos, excepto si se está editando otro input válido
         function focusScanner() {
             const activeEl = document.activeElement;
             const inputsIgnorados = ['search-producto', 'cantidad-producto', 'user_id', 'metodo_pago', 'proveedor_id', 'producto_id', 'cantidad_producto', 'monto', 'descripcion'];
@@ -307,28 +310,24 @@
             if (activeEl && inputsIgnorados.includes(activeEl.id) || activeEl.name && inputsIgnorados.includes(activeEl.name)) {
                 return;
             }
-            // Solo enfocar si estamos en la pestaña de venta
             const wrapper = document.querySelector('.pos-wrapper');
             if (wrapper && wrapper.__x && wrapper.__x.$data.tab === 'venta') {
                 barcodeScannerInput?.focus();
             }
         }
 
-        // Enfocar al inicio y recuperar foco tras hacer clics vagos en la pantalla
         setTimeout(focusScanner, 200);
         document.addEventListener('click', () => setTimeout(focusScanner, 150));
 
-        // Lógica de captura y procesamiento del Código de Barras
         barcodeScannerInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Evitar cualquier submit indeseado por el Enter automático del lector
+                e.preventDefault();
                 
                 const scannedCode = this.value.trim();
-                this.value = ''; // Limpiar de inmediato para la siguiente lectura
+                this.value = '';
                 
                 if (scannedCode === '') return;
 
-                // Buscar el elemento en la lista que coincida con el atributo data-barcode
                 const matchedOption = optionsContainer.querySelector(`.option-item[data-barcode="${scannedCode}"]`);
 
                 if (matchedOption) {
@@ -337,7 +336,6 @@
                     const precio = parseFloat(matchedOption.getAttribute('data-precio'));
                     const stock = parseInt(matchedOption.getAttribute('data-stock'));
 
-                    // Forzar la inyección directa al Detalle del Consumo (Cantidad fija de 1 por lectura)
                     inyectarProductoDirecto(id, name, precio, stock, 1);
                 } else {
                     alert(`Código de barras "${scannedCode}" no asociado a ningún producto.`);
@@ -345,7 +343,6 @@
             }
         });
 
-        // Función Modularizada para Inyectar a Detalle Consumo directamente
         function inyectarProductoDirecto(prodId, prodNombre, prodPrecio, prodStock, cantidad) {
             if (prodStock <= 0) {
                 alert(`El producto "${prodNombre}" no cuenta con stock disponible.`);
@@ -398,7 +395,6 @@
             calcularGranTotal();
         }
 
-        // select trigger interactividad estándar manual
         selectTrigger.addEventListener('click', function(e) {
             e.stopPropagation();
             selectDropdown.classList.toggle('hidden');
@@ -448,7 +444,6 @@
             optionsContainer.querySelectorAll('.option-item').forEach(item => item.style.setProperty('display', 'flex', 'important'));
         });
 
-        // Botón agregar manual
         btnAgregar.addEventListener('click', function() {
             if (!productoSeleccionadoData || !hiddenInputProducto.value) {
                 alert('Por favor, selecciona un producto válido de la lista.');
