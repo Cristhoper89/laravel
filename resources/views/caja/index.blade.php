@@ -4,7 +4,8 @@
 
             <!-- CONFIGURACIÓN DE HUELLA DIGITAL DIRECTA -->
             <div class="flex justify-end mb-4">
-                <button onclick="abrirModalRegistroHuella()" class="px-4 py-2 bg-slate-800 text-slate-200 border border-white/10 rounded-xl font-medium text-xs hover:bg-slate-700 transition cursor-pointer flex items-center gap-2">
+                <button onclick="abrirModalRegistroHuella()"
+                    class="cfg-btn-secondary px-4 py-2 rounded-xl font-medium text-xs transition cursor-pointer flex items-center gap-2">
                     ⚙️ Configurar mi Huella Digital
                 </button>
             </div>
@@ -25,34 +26,42 @@
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-slate-400">💵 Monto Base Inicial:</span>
-                                <span class="font-bold text-white">${{ number_format($cajaAbierta->monto_apertura, 2) }}</span>
+                                <span
+                                    class="font-bold text-white">${{ number_format($cajaAbierta->monto_apertura, 2) }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-400">🟢 Ventas en Efectivo (+):</span>
-                                <span class="font-bold text-emerald-400">+ ${{ number_format($totales['ventas_efectivo'], 2) }}</span>
+                                <span class="font-bold text-emerald-400">+
+                                    ${{ number_format($totales['ventas_efectivo'], 2) }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-400">💳 Ventas con Tarjeta:</span>
-                                <span class="font-bold text-sky-400">${{ number_format($totales['ventas_tarjeta'], 2) }}</span>
+                                <span
+                                    class="font-bold text-sky-400">${{ number_format($totales['ventas_tarjeta'], 2) }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-400">📝 Ventas a Crédito:</span>
-                                <span class="font-bold text-amber-400">${{ number_format($totales['ventas_credito'], 2) }}</span>
+                                <span
+                                    class="font-bold text-amber-400">${{ number_format($totales['ventas_credito'], 2) }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-400">🔴 Gastos / Salidas (-):</span>
-                                <span class="font-bold text-rose-400">- ${{ number_format($totales['gastos'], 2) }}</span>
+                                <span class="font-bold text-rose-400">-
+                                    ${{ number_format($totales['gastos'], 2) }}</span>
                             </div>
 
                             <hr class="border-white/10 my-4">
 
-                            <div class="flex justify-between text-base bg-white/5 p-3 rounded-xl border border-white/10">
+                            <div
+                                class="flex justify-between text-base bg-white/5 p-3 rounded-xl border border-white/10">
                                 <span class="font-black text-slate-300">💰 Efectivo Esperado Real:</span>
-                                <span class="font-black text-emerald-400">${{ number_format($totales['efectivo_esperado_final'], 2) }}</span>
+                                <span
+                                    class="font-black text-emerald-400">${{ number_format($totales['efectivo_esperado_final'], 2) }}</span>
                             </div>
 
                             <div class="text-center text-[11px] text-slate-500 mt-2">
-                                Total de ventas brutas registradas en el turno: ${{ number_format($totales['total_ventas_acumulado'], 2) }}
+                                Total de ventas brutas registradas en el turno:
+                                ${{ number_format($totales['total_ventas_acumulado'], 2) }}
                             </div>
                         </div>
                     </div>
@@ -68,7 +77,8 @@
                     <div class="bg-black/20 p-6 rounded-2xl border border-white/5 mb-6">
                         <p class="text-rose-400 text-sm mb-4 font-bold">🔴 ESTADO: CAJA CERRADA</p>
                         <div class="text-left">
-                            <label class="block text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Monto Base de Apertura (Efectivo en Caja)</label>
+                            <label class="block text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Monto
+                                Base de Apertura (Efectivo en Caja)</label>
                             <input type="number" id="montoCaja"
                                 class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white text-center focus:outline-none text-lg font-bold"
                                 placeholder="0.00" value="0">
@@ -83,11 +93,14 @@
             </div>
 
             <!-- MODAL DE CONFIRMACIÓN (APERTURA / CIERRE) -->
-            <div id="modalPassword" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                <div class="feature-card border rounded-3xl p-6 w-full max-w-sm text-center bg-slate-900 text-white border-white/10">
+            <div id="modalPassword"
+                class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                <div
+                    class="feature-card border rounded-3xl p-6 w-full max-w-sm text-center bg-slate-900 text-white border-white/10">
                     <div class="text-3xl mb-2">🔑 / ☝️</div>
                     <h3 id="modalTitulo" class="text-xl font-bold mb-2 text-white">Confirmar Apertura</h3>
-                    <p class="text-slate-400 text-xs mb-4">Ingresa tu contraseña de administrador o usa tu huella digital para autorizar el movimiento de caja:</p>
+                    <p class="text-slate-400 text-xs mb-4">Ingresa tu contraseña de administrador o usa tu huella
+                        digital para autorizar el movimiento de caja:</p>
 
                     <!-- Campo de contraseña tradicional -->
                     <input type="password" id="confirmPassword"
@@ -110,17 +123,25 @@
             </div>
 
             <!-- MODAL: VERIFICAR CONTRASEÑA ANTES DE REGISTRAR HUELLA -->
-            <div id="modalRegistroHuella" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                <div class="feature-card border rounded-3xl p-6 w-full max-w-sm text-center bg-slate-900 text-white border-white/10">
+            <div id="modalRegistroHuella"
+                class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                <div
+                    class="feature-card border rounded-3xl p-6 w-full max-w-sm text-center bg-slate-900 text-white border-white/10">
                     <div class="text-3xl mb-2">🛡️</div>
                     <h3 class="text-xl font-bold mb-2 text-white">Autorizar Registro</h3>
-                    <p class="text-slate-400 text-xs mb-4">Por seguridad, confirma tu contraseña antes de vincular tu huella digital:</p>
-                    
-                    <input type="password" id="passwordParaHuella" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white text-center mb-4 focus:outline-none focus:border-emerald-500" placeholder="••••••••">
-                    
+                    <p class="text-slate-400 text-xs mb-4">Por seguridad, confirma tu contraseña antes de vincular tu
+                        huella digital:</p>
+
+                    <input type="password" id="passwordParaHuella"
+                        class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white text-center mb-4 focus:outline-none focus:border-emerald-500"
+                        placeholder="••••••••">
+
                     <div class="flex gap-3">
-                        <button onclick="document.getElementById('modalRegistroHuella').classList.add('hidden')" class="w-1/2 bg-white/5 border border-white/5 text-slate-400 py-2 rounded-xl text-sm font-semibold cursor-pointer hover:bg-white/10">Cancelar</button>
-                        <button onclick="verificarYRegistrarHuella()" class="w-1/2 font-bold py-2 rounded-xl text-sm text-white cursor-pointer bg-emerald-600 hover:bg-emerald-700">Verificar Clave</button>
+                        <button onclick="document.getElementById('modalRegistroHuella').classList.add('hidden')"
+                            class="w-1/2 bg-white/5 border border-white/5 text-slate-400 py-2 rounded-xl text-sm font-semibold cursor-pointer hover:bg-white/10">Cancelar</button>
+                        <button onclick="verificarYRegistrarHuella()"
+                            class="w-1/2 font-bold py-2 rounded-xl text-sm text-white cursor-pointer bg-emerald-600 hover:bg-emerald-700">Verificar
+                            Clave</button>
                     </div>
                 </div>
             </div>
@@ -143,7 +164,8 @@
                 return;
             }
 
-            document.getElementById('modalTitulo').innerText = accion === 'abrir' ? 'Confirmar Apertura' : 'Confirmar Cierre de Caja';
+            document.getElementById('modalTitulo').innerText = accion === 'abrir' ? 'Confirmar Apertura' :
+                'Confirmar Cierre de Caja';
             document.getElementById('confirmPassword').value = '';
             document.getElementById('modalPassword').classList.remove('hidden');
         }
@@ -229,8 +251,13 @@
             try {
                 let responseValidar = await fetch('/caja/validar-contrasena', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                    body: JSON.stringify({ password: password })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        password: password
+                    })
                 });
 
                 let dataValidar = await responseValidar.json();
@@ -244,9 +271,10 @@
 
                 // Inicializamos el flujo de registro nativo de asbiin/laravel-webauthn
                 const webauthn = new WebAuthn();
-                await webauthn.register(); 
-                
-                alert("¡Tu huella digital se ha registrado y vinculado con éxito! Ya puedes usarla para abrir o cerrar caja.");
+                await webauthn.register();
+
+                alert(
+                    "¡Tu huella digital se ha registrado y vinculado con éxito! Ya puedes usarla para abrir o cerrar caja.");
 
             } catch (error) {
                 console.error(error);
