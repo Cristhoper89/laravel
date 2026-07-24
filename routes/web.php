@@ -79,12 +79,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{id}/destroy', [CategoryController::class, 'destroyProducto'])->name('destroy');
     });
 
-    // Auditoría de Facturas & Reportes
-    Route::prefix('admin/facturas')->name('facturas.')->group(function () {
-        Route::get('/', [FacturaController::class, 'index'])->name('index');
-        Route::get('/{id}', [FacturaController::class, 'show'])->name('show');
-    });
-
     Route::put('/admin/facturas/{id}/update-pago', [FacturaController::class, 'updatePago']);
     Route::patch('/admin/reportes/{id}/toggle', [FacturaController::class, 'toggleReporte']);
     Route::get('/admin/facturas/{id}/imprimir', [PanelEstadisticoController::class, 'imprimirFactura'])->name('facturas.imprimir');
@@ -106,6 +100,12 @@ Route::middleware(['auth', 'role:admin,cajero,cajero2'])->group(function () {
     Route::get('/caja', [CajaController::class, 'index'])->name('caja.index');
     Route::get('/caja/historial', [CajaController::class, 'historial'])->name('caja.historial');
     Route::get('/caja/{caja}/movimientos', [CajaController::class, 'obtenerMovimientos'])->name('caja.movimientos');
+
+    // Auditoría de Facturas & Reportes
+    Route::prefix('admin/facturas')->name('facturas.')->group(function () {
+        Route::get('/', [FacturaController::class, 'index'])->name('index');
+        Route::get('/{id}', [FacturaController::class, 'show'])->name('show');
+    });
 });
 
 // B) Operaciones de Escritura en Caja (SOLO Admin y Cajero normal)

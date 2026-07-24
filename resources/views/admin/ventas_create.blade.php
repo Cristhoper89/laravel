@@ -164,6 +164,7 @@
                                         <option value="Efectivo">💵 Efectivo</option>
                                         <option value="Transferencia">📱 Transferencia Bancaria</option>
                                         <option value="Tarjeta">💳 Tarjeta de Débito / Crédito</option>
+                                        <option value="Plataforma">🧑‍💻 Plataforma</option>
                                     </select>
                                 </div>
 

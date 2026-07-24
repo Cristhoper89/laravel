@@ -24,33 +24,41 @@ class CajaController extends Controller
             // 1. Obtener de la tabla 'reports' solo los IDs que estén estrictamente 'activo' en este turno
             $reportesDelTurno = DB::table('reports')
                 ->whereBetween('created_at', [$desde, $hasta])
-                ->where('status', 'activo') // Filtro único y centralizado de estados
+                ->where('status', 'activo')
                 ->get();
 
             $facturaIds = $reportesDelTurno->pluck('id_factura')->filter()->toArray();
             $movimientoIds = $reportesDelTurno->pluck('movimiento_id')->filter()->toArray();
 
-            // 2. FACTURAS: Sumamos directamente usando la lista de IDs activos
-            // (Asegúrate de que la columna se llame 'metodo_pago' en tu tabla 'factura')
-            $facturasEfectivo = Factura::whereIn('id', $facturaIds)->where('metodo_pago', 'efectivo')->sum('total');
-            $facturasTarjeta  = Factura::whereIn('id', $facturaIds)->where('metodo_pago', 'tarjeta')->sum('total');
-            $facturasCredito  = Factura::whereIn('id', $facturaIds)->where('metodo_pago', 'credito')->sum('total');
+            // 2. FACTURAS POR MÉTODOS DE PAGO (Variables separadas)
+            $facturasEfectivo      = Factura::whereIn('id', $facturaIds)->where('metodo_pago', 'Efectivo')->sum('total');
+            $facturasTarjeta       = Factura::whereIn('id', $facturaIds)->where('metodo_pago', 'Tarjeta')->sum('total');
+            $facturasPlataforma    = Factura::whereIn('id', $facturaIds)->where('metodo_pago', 'Plataforma')->sum('total');
+            $facturasTransferencia = Factura::whereIn('id', $facturaIds)->where('metodo_pago', 'Transferencia')->sum('total');
 
-            // 3. MOVIMIENTOS DE CAJA: Sumamos directamente usando la lista de IDs activos y la columna 'monto'
+            // 3. MOVIMIENTOS DE CAJA
             $movimientosIngresoEfectivo = MovimientoCaja::whereIn('id', $movimientoIds)->where('tipo', 'ingreso')->sum('monto');
             $movimientosEgresoEfectivo  = MovimientoCaja::whereIn('id', $movimientoIds)->where('tipo', 'egreso')->sum('monto');
 
-            // 4. BALANCE DE ARQUEO TOTALIZADO
+            // 4. CÁLCULOS Y BALANCE DE ARQUEO
+            // Dinero físico esperado solo en efectivo (Caja física)
             $efectivoTotalCaja = $cajaAbierta->monto_apertura + $facturasEfectivo + $movimientosIngresoEfectivo - $movimientosEgresoEfectivo;
-            $totalVentasAcumulado = $facturasEfectivo + $facturasTarjeta + $facturasCredito;
+            
+            // Suma total de todas las ventas del turno (Todos los métodos)
+            $totalVentasAcumulado = $facturasEfectivo + $facturasTarjeta + $facturasPlataforma + $facturasTransferencia;
+
+            // Total con el que debería cerrar la caja (Apertura + Todas las ventas + Entradas - Salidas)
+            $montoCierreCalculado = $cajaAbierta->monto_apertura + $totalVentasAcumulado + $movimientosIngresoEfectivo - $movimientosEgresoEfectivo;
 
             $totales = [
-                'ventas_efectivo' => $facturasEfectivo + $movimientosIngresoEfectivo,
-                'ventas_tarjeta'  => $facturasTarjeta,
-                'ventas_credito'  => $facturasCredito,
-                'gastos'          => $movimientosEgresoEfectivo,
+                'ventas_efectivo'         => $facturasEfectivo + $movimientosIngresoEfectivo,
+                'ventas_tarjeta'          => $facturasTarjeta,
+                'ventas_plataforma'       => $facturasPlataforma,
+                'ventas_transferencia'    => $facturasTransferencia,
+                'gastos'                  => $movimientosEgresoEfectivo,
                 'efectivo_esperado_final' => $efectivoTotalCaja,
-                'total_ventas_acumulado'  => $totalVentasAcumulado
+                'total_ventas_acumulado'  => $totalVentasAcumulado,
+                'monto_cierre_calculado'  => $montoCierreCalculado
             ];
         }
 
@@ -59,7 +67,6 @@ class CajaController extends Controller
 
     public function procesarCaja(Request $request)
     {
-        // Validamos primero los datos comunes y el tipo de autenticación
         $request->validate([
             'accion'    => 'required|in:abrir,cerrar',
             'monto'     => 'required|numeric|min:0',
@@ -69,25 +76,20 @@ class CajaController extends Controller
         $authType = $request->input('auth_type');
         $user = auth()->user();
 
-        // --- LOGICA DE AUTENTICACIÓN OPCIONAL ---
         if ($authType === 'password') {
-            // Si elige contraseña, esta pasa a ser obligatoria aquí
             $request->validate(['password' => 'required']);
 
             if (!Hash::check($request->password, $user->password)) {
                 return response()->json(['success' => false, 'message' => 'La contraseña de confirmación es incorrecta.'], 401);
             }
         } else {
-            // Si elige huella, validamos la aserción enviada por el script de JS
             $request->validate(['webauthn_assertion' => 'required']);
 
-            // El facade comprueba los datos del sensor contra las llaves públicas guardadas en tu nueva tabla
             if (!\LaravelWebauthn\Facades\Webauthn::validateAssertion($user, $request->input('webauthn_assertion'))) {
                 return response()->json(['success' => false, 'message' => 'Validación biométrica fallida o no autorizada.'], 401);
             }
         }
 
-        // --- PROCESAMIENTO DE TU CAJA (MANTENIDO EXACTAMENTE IGUAL) ---
         $accion = $request->input('accion');
         $monto = $request->input('monto');
 
@@ -122,6 +124,7 @@ class CajaController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Acción inválida.'], 400);
     }
+
     public function validarContrasena(Request $request)
     {
         $request->validate([
@@ -141,13 +144,6 @@ class CajaController extends Controller
         ]);
     }
 
-// =========================================================================
-// HISTORIAL DE CAJAS
-// =========================================================================
-
-    /**
-     * Muestra la tabla de historial de turnos/arqueos de caja.
-     */
     public function historial(Request $request)
     {
         $cajas = Caja::with('user')
@@ -157,32 +153,27 @@ class CajaController extends Controller
         return view('caja.historial', compact('cajas'));
     }
 
-    /**
-     * Obtiene los movimientos (y facturas) correspondientes al turno de una caja.
-     */
     public function obtenerMovimientos(Caja $caja)
-{
-    $desde = $caja->created_at;
-    $hasta = $caja->fecha_cierre ?? now();
+    {
+        $desde = $caja->created_at;
+        $hasta = $caja->fecha_cierre ?? now();
 
-    // Consultamos la tabla 'reports' del turno exacto
-    $reportesDelTurno = DB::table('reports')
-        ->whereBetween('created_at', [$desde, $hasta])
-        ->where('status', 'activo')
-        ->get();
+        $reportesDelTurno = DB::table('reports')
+            ->whereBetween('created_at', [$desde, $hasta])
+            ->where('status', 'activo')
+            ->get();
 
-    $movimientoIds = $reportesDelTurno->pluck('movimiento_id')->filter()->toArray();
-    $facturaIds    = $reportesDelTurno->pluck('id_factura')->filter()->toArray();
+        $movimientoIds = $reportesDelTurno->pluck('movimiento_id')->filter()->toArray();
+        $facturaIds    = $reportesDelTurno->pluck('id_factura')->filter()->toArray();
 
-    // Traemos los detalles según las llaves foráneas identificadas
-    $movimientos = MovimientoCaja::whereIn('id', $movimientoIds)->latest()->get();
-    $facturas    = Factura::whereIn('id', $facturaIds)->latest()->get();
+        $movimientos = MovimientoCaja::whereIn('id', $movimientoIds)->latest()->get();
+        $facturas    = Factura::whereIn('id', $facturaIds)->latest()->get();
 
-    return response()->json([
-        'success'     => true,
-        'caja_id'     => $caja->id,
-        'movimientos' => $movimientos,
-        'facturas'    => $facturas,
-    ]);
-}
+        return response()->json([
+            'success'     => true,
+            'caja_id'     => $caja->id,
+            'movimientos' => $movimientos,
+            'facturas'    => $facturas,
+        ]);
+    }
 }

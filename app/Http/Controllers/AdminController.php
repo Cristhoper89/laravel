@@ -229,8 +229,12 @@ class AdminController extends Controller
             'unit_of_measurement' => 'required|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable'
+            'image' => 'nullable',
+            'state' => 'nullable|boolean', // Permite validar el estado si viene del formulario
         ]);
+
+        // Asignamos 'true' (activo) por defecto si no viene explícitamente en el request
+        $validated['state'] = $request->has('state') ? $request->boolean('state') : true;
 
         if ($request->hasFile('image')) {
             $request->validate([

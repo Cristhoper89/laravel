@@ -92,6 +92,9 @@
                                     <option value="Transferencia" {{ $factura->metodo_pago == 'Transferencia' ? 'selected' : '' }}>
                                         Transferencia 🏦
                                     </option>
+                                    <option value="Plataforma" {{ $factura->metodo_pago == 'Plataforma' ? 'selected' : '' }}>
+                                        Plataforma 🏦
+                                    </option>
                                 </select>
                             </div>
 

@@ -10,7 +10,7 @@
                     class="space-y-6">
                     @csrf
 
-                    <!-- Nombre del Producto -->
+                    <!-- NOMBRE DEL PRODUCTO -->
                     <div>
                         <label class="block admin-subtitle mb-2 text-sm font-medium">Nombre del producto</label>
                         <!-- Usamos .usr-input para mantener la coherencia estética de las cajas de texto -->
@@ -23,7 +23,24 @@
                         @enderror
                     </div>
 
-                    <!-- Proveedor y Categoría -->
+                    <!-- CÓDIGO DE BARRAS -->
+                    <div>
+                        <label class="block admin-subtitle mb-2 text-sm font-medium">Código de Barras 🛠️ (Escanea directamente aquí)</label>
+                        <div class="relative">
+                            <input type="text" id="barcode" name="barcode" value="{{ old('barcode') }}"
+                                placeholder="Haz clic aquí y escanea el código de barras..."
+                                class="w-full usr-input border rounded-2xl p-3 pl-10 focus:outline-none transition duration-200 font-mono tracking-wider">
+                            <div class="absolute left-3 top-1.5 text-lg">
+                                🏷️
+                            </div>
+                        </div>
+                        <p class="admin-subtitle opacity-70 text-[11px] mt-1">Si usas un lector físico, selecciónalo y dispara sobre las barras. Deja en blanco si no aplica.</p>
+                        @error('barcode')
+                            <p class="usr-text-error text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- PROVEEDOR Y CATEGORÍA -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block admin-subtitle mb-2 text-sm font-medium">Proveedor 🚚</label>
@@ -62,7 +79,7 @@
                         </div>
                     </div>
 
-                    <!-- Unidad de Medida -->
+                    <!-- UNIDAD DE MEDIDA -->
                     <div>
                         <label class="block admin-subtitle mb-2 text-sm font-medium">Unidad de Medida</label>
                         <select name="unit_of_measurement"
@@ -77,7 +94,7 @@
                         @enderror
                     </div>
 
-                    <!-- Precio y Stock -->
+                    <!-- PRECIO Y STOCK -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block admin-subtitle mb-2 text-sm font-medium">Precio ($)</label>
@@ -100,7 +117,7 @@
                         </div>
                     </div>
 
-                    <!-- Sección de la Imagen con Alpine.js -->
+                    <!-- SECCIÓN DE LA IMAGEN CON ALPINE.JS -->
                     <div class="usr-photo-section border rounded-2xl p-4 space-y-4"
                         x-data="{ tipoImagen: '{{ old('image') && filter_var(old('image'), FILTER_VALIDATE_URL) ? 'url' : 'file' }}' }">
 
@@ -166,4 +183,14 @@
             </div>
         </div>
     </div>
+
+    <!-- PREVENCIÓN DE ENVÍO ACCIDENTAL POR EL LECTOR DE CÓDIGO DE BARRAS -->
+    <script>
+        document.getElementById('barcode').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Detiene el submit accidental del formulario al escanear
+                console.log("Código capturado con éxito: " + this.value);
+            }
+        });
+    </script>
 </x-app-layout>

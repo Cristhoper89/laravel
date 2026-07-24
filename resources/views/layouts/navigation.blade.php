@@ -103,6 +103,10 @@
                                 class="nav-link flex items-center gap-3 p-3 rounded-xl transition duration-200 font-medium text-sm">
                                 <span>📊</span> Historial de Cajas
                             </a>
+                            <a href="{{ route('facturas.index') }}"
+                                class="nav-link flex items-center gap-3 p-3 rounded-xl transition duration-200 font-medium text-sm">
+                                <span>📊</span> Reportes de caja
+                            </a>
                         @endif
 
                         {{-- 💵 OPCIONES PARA CAJERO 2 (Solo consulta/control de caja) --}}
@@ -110,6 +114,10 @@
                             <a href="{{ route('caja.historial') }}"
                                 class="nav-link flex items-center gap-3 p-3 rounded-xl transition duration-200 font-medium text-sm">
                                 <span>📊</span> Historial de Cajas
+                            </a>
+                            <a href="{{ route('facturas.index') }}"
+                                class="nav-link flex items-center gap-3 p-3 rounded-xl transition duration-200 font-medium text-sm">
+                                <span>📊</span> Reportes de caja
                             </a>
                         @endif
 
