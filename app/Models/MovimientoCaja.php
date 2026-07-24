@@ -39,4 +39,9 @@ class MovimientoCaja extends Model
     {
         return $this->belongsTo(Producto::class, 'producto_id');
     }
+    
+    public function caja()
+{
+    return $this->belongsTo(Caja::class, 'caja_id');
+}
 }

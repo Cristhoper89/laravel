@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Proveedor;
 use App\Models\User;
-use App\Models\Category; // Importa los modelos arriba
-use App\Models\Producto; // Importamos el modelo de comida
+use App\Models\Category;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -20,14 +20,42 @@ class AdminController extends Controller
     /**
      * Muestra la tabla principal con todo el menú de comida.
      */
-    public function index()
+        public function index(Request $request)
     {
-        $productos = Producto::all(); // El admin ve toda la comida, incluso sin stock
-        return view('admin.dashboard', compact('productos'));
+        $tab = $request->input('tab', 'activos'); // Filtro por defecto: 'activos'
+
+        // Métricas rápidas para las tarjetas (KPIs)
+        $totalProductos = Producto::count();
+        $totalActivos = Producto::where('state', true)->orWhereNull('state')->count();
+        $totalInactivos = Producto::where('state', false)->count();
+        $bajoStock = Producto::where('state', true)->where('stock', '<=', 10)->count();
+
+        // Consulta filtrada según la pestaña seleccionada
+        $query = Producto::query();
+
+        if ($tab === 'inactivos') {
+            $query->where('state', false);
+        } else {
+            // Considera 'true' o valores nulos por compatibilidad con registros previos
+            $query->where(function($q) {
+                $q->where('state', true)->orWhereNull('state');
+            });
+        }
+
+        $productos = $query->orderBy('name', 'asc')->get();
+
+        return view('admin.dashboard', compact(
+            'productos',
+            'tab',
+            'totalProductos',
+            'totalActivos',
+            'totalInactivos',
+            'bajoStock'
+        ));
     }
 
     // =========================================================================
-    // CRUD DE USUARIOS (ADMIN / CLIENTE)
+    // CRUD DE USUARIOS (ADMIN / CLIENTE / CAJERO / CAJERO2)
     // =========================================================================
 
     /**
@@ -63,61 +91,53 @@ class AdminController extends Controller
     }
 
     /**
-     * Guardar nuevo usuario con Foto (Solo admin o cliente).
+     * Guardar nuevo usuario con Foto (Soporta admin, cliente, cajero y cajero2).
      */
     public function store(Request $request)
-{
-    // 1. Validación inicial flexible para los datos del usuario
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8',
-        'role' => ['required', \Illuminate\Validation\Rule::in(['admin', 'cliente'])],
-        'photo' => 'nullable', // Pasará libre inicialmente para evaluarlo abajo
-    ]);
-
-    $photoPath = null;
-
-    // 2. ✨ PROCESAMIENTO HÍBRIDO SEGURO DEL CAMPO 'photo'
-    if ($request->hasFile('photo')) {
-        
-        // CASO A: Es un archivo local físico
-        // Aquí sí limitamos el formato y peso en el servidor (2MB)
+    {
+        // 1. Validación inicial actualizada con los nuevos roles
         $request->validate([
-            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => ['required', Rule::in(['admin', 'cliente', 'cajero', 'cajero2'])],
+            'photo' => 'nullable',
         ]);
 
-        $path = $request->file('photo')->store('photos', 'public');
-        $photoPath = '/storage/' . $path;
+        $photoPath = null;
 
-    } elseif ($request->filled('photo')) {
-        
-        // CASO B: El usuario pegó texto en el campo
-        $urlCandidata = trim($request->photo);
+        // 2. PROCESAMIENTO HÍBRIDO SEGURO DEL CAMPO 'photo'
+        if ($request->hasFile('photo')) {
+            $request->validate([
+                'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
 
-        // 🌟 FILTRO ESTRICTO: Valida si es una dirección URL web legítima
-        // Esto descarta automáticamente los textos masivos en Base64 y previene el error 22001
-        if (filter_var($urlCandidata, FILTER_VALIDATE_URL)) {
-            $photoPath = $urlCandidata;
-        } else {
-            // Si es un Base64 o texto inválido, regresa con un mensaje de error limpio a la vista
-            return back()
-                ->withErrors(['photo' => 'El texto ingresado no es un enlace URL web válido. Por favor, introduce una dirección directa de internet (ej. https://...) o sube un archivo local.'])
-                ->withInput();
+            $path = $request->file('photo')->store('photos', 'public');
+            $photoPath = '/storage/' . $path;
+
+        } elseif ($request->filled('photo')) {
+            $urlCandidata = trim($request->photo);
+
+            if (filter_var($urlCandidata, FILTER_VALIDATE_URL)) {
+                $photoPath = $urlCandidata;
+            } else {
+                return back()
+                    ->withErrors(['photo' => 'El texto ingresado no es un enlace URL web válido. Por favor, introduce una dirección directa de internet (ej. https://...) o sube un archivo local.'])
+                    ->withInput();
+            }
         }
+
+        // 3. Crear el registro usando asignación masiva segura
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'photo' => $photoPath,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
     }
-
-    // 3. Crear el registro usando asignación masiva segura
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => $request->role,
-        'photo' => $photoPath,
-    ]);
-
-    return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
-}
 
     public function edit($id)
     {
@@ -135,8 +155,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            // CORREGIDO: Ahora solo valida 'admin' y 'cliente'
-            'role' => ['required', Rule::in(['admin', 'cliente'])],
+            'role' => ['required', Rule::in(['admin', 'cliente', 'cajero', 'cajero2'])],
             'password' => 'nullable|string|min:8',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -153,7 +172,7 @@ class AdminController extends Controller
             }
 
             $path = $request->file('photo')->store('photos', 'public');
-            $data['photo'] = $path;
+            $data['photo'] = '/storage/' . $path;
         }
 
         $user->update($data);
@@ -173,7 +192,8 @@ class AdminController extends Controller
         }
 
         if ($user->photo) {
-            Storage::disk('public')->delete($user->photo);
+            $oldPath = str_replace('/storage/', '', $user->photo);
+            Storage::disk('public')->delete($oldPath);
         }
 
         $user->delete();
@@ -184,13 +204,12 @@ class AdminController extends Controller
     // =========================================================================
     // CRUD DE PRODUCTOS (COMIDA)
     // =========================================================================
-
+    
     /**
      * Muestra el formulario para agregar un producto nuevo.
      */
     public function createProducto()
     {
-        // Traemos solo los proveedores y categorías activos para listarlos en el formulario
         $proveedores = Proveedor::orderBy('company_name', 'asc')->get();
         $categorias = Category::where('type', 'activo')->orderBy('name', 'asc')->get();
 
@@ -202,10 +221,9 @@ class AdminController extends Controller
      */
     public function storeProducto(Request $request)
     {
-        // 1. Modificamos la validación inicial. 
-        // ❌ Quitamos 'image' para que no rechace los strings de tipo URL.
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'barcode' => 'nullable|string|max:255',
             'supplier_id' => 'required|exists:proveedors,id',
             'category_id' => 'required|exists:category,id',
             'unit_of_measurement' => 'required|string',
@@ -214,35 +232,23 @@ class AdminController extends Controller
             'image' => 'nullable'
         ]);
 
-        // 2. ✨ PROCESAMIENTO HÍBRIDO DEL CAMPO 'image'
         if ($request->hasFile('image')) {
-
-            // CASO A: Es un archivo local físico de verdad.
-            // Ejecutamos validación estricta de imagen en tiempo de ejecución.
             $request->validate([
-                'image' => 'image|mimes:jpeg,png,jpg,webp,gif'
+                'image' => 'image|mimes:jpeg,png,jpg,webp,gif|max:2048'
             ]);
 
-            // Guarda en storage/app/public/products y asigna la ruta con el prefijo /storage/
-            // Esto garantiza compatibilidad con la validación triple en cascada de tus vistas
             $path = $request->file('image')->store('products', 'public');
             $validated['image'] = '/storage/' . $path;
         } elseif ($request->filled('image')) {
-
-            // CASO B: El usuario no subió archivo pero pegó un texto (URL).
-            // Validamos que cumpla estrictamente con el formato de un enlace web.
             if (filter_var($request->input('image'), FILTER_VALIDATE_URL)) {
                 $validated['image'] = $request->input('image');
             } else {
-                // Si puso texto plano que no es una URL, regresamos marcando el error en la vista
                 return back()->withErrors(['image' => 'El enlace proporcionado no es una dirección URL válida.'])->withInput();
             }
         } else {
-            // CASO C: Si no se envió ninguna imagen, puedes dejarlo como null o una por defecto
             $validated['image'] = null;
         }
 
-        // 3. Crear el registro usando asignación masiva ($fillable) con la data limpia
         Producto::create($validated);
 
         return redirect()->route('admin.dashboard')->with('success', 'Producto creado con éxito.');
@@ -265,13 +271,11 @@ class AdminController extends Controller
      */
     public function updateProducto(Request $request, $id)
     {
-        // Buscamos el producto en la base de datos
         $producto = Producto::findOrFail($id);
 
-        // 1. Modificamos la validación inicial.
-        // Separamos 'image_file' e 'image_url' para que actúen de forma independiente y opcional.
         $request->validate([
             'name' => 'required|string|max:255',
+            'barcode' => 'nullable|string|max:255',
             'supplier_id' => 'required|exists:proveedors,id', 
             'category_id' => 'required|exists:category,id',
             'unit_of_measurement' => 'required|string',
@@ -281,69 +285,66 @@ class AdminController extends Controller
             'image_url' => 'nullable|url',
         ]);
 
-        // Capturamos los datos básicos del formulario (excluyendo los inputs de imagen)
-        $data = $request->only(['name', 'supplier_id', 'category_id', 'unit_of_measurement', 'price', 'stock']);
+        $data = $request->only(['name','barcode', 'supplier_id', 'category_id', 'unit_of_measurement', 'price', 'stock']);
 
-        // 2. ✨ PROCESAMIENTO HÍBRIDO SEGURO DEL RECURSO MULTIMEDIA
         if ($request->hasFile('image_file')) {
-            
-            // CASO A: El usuario subió un archivo físico local nuevo
-            // Si existía una imagen local previa almacenada, la eliminamos del disco
             if ($producto->image && !\Illuminate\Support\Str::startsWith($producto->image, 'http')) {
-                // Limpiamos la ruta removiendo el prefijo '/storage/' si lo tiene para que Storage::delete funcione correctamente
                 $oldPath = str_replace('/storage/', '', $producto->image);
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                Storage::disk('public')->delete($oldPath);
             }
 
-            // Guardamos el nuevo archivo en public/products y guardamos la ruta estructurada con /storage/
             $path = $request->file('image_file')->store('products', 'public');
             $data['image'] = '/storage/' . $path;
 
         } elseif ($request->filled('image_url')) {
-            
-            // CASO B: El usuario pegó o modificó un enlace URL web directo
             $urlCandidata = trim($request->image_url);
 
-            // Validamos estrictamente que la estructura del texto corresponda a un enlace URL legítimo
             if (filter_var($urlCandidata, FILTER_VALIDATE_URL)) {
-                
-                // Opcional: Si antes había una imagen física local y ahora pasa a ser URL, borramos el archivo viejo del servidor
                 if ($producto->image && !\Illuminate\Support\Str::startsWith($producto->image, 'http')) {
                     $oldPath = str_replace('/storage/', '', $producto->image);
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    Storage::disk('public')->delete($oldPath);
                 }
 
                 $data['image'] = $urlCandidata;
             } else {
-                // Si introdujo texto inválido, retornamos notificando el error
                 return back()
                     ->withErrors(['image_url' => 'El enlace proporcionado no es una dirección URL válida.'])
                     ->withInput();
             }
         }
 
-        // 3. Sincronizamos y actualizamos el modelo en la base de datos
         $producto->update($data);
 
         return redirect()->route('admin.dashboard')->with('success', 'Producto actualizado con éxito.');
     }
 
     /**
-     * Eliminar un producto.
+     * Eliminar (desactivar) un producto.
      */
     public function destroyProducto($id)
     {
-        // Buscamos el producto
         $producto = Producto::findOrFail($id);
 
-        // Si tiene una imagen física local asignada, la eliminamos del disco antes de borrar el registro
-        if ($producto->image && !str_starts_with($producto->image, 'http')) {
-            Storage::disk('public')->delete($producto->image);
-        }
+        // En lugar de delete(), cambiamos el estado a inactivo
+        $producto->update([
+            'state' => false
+        ]);
 
-        // Borramos el producto de la base de datos
-        $producto->delete();
+        return redirect()->route('admin.dashboard')->with('success', 'Producto desactivado correctamente.');
+    }
 
-        return redirect()->route('admin.dashboard')->with('success', 'Producto eliminado correctamente.');
+    /**
+     * Reactivar un producto desactivado previamente.
+     */
+    public function reactivarProducto($id)
+    {
+        $producto = Producto::findOrFail($id);
+
+        $producto->update([
+            'state' => true
+        ]);
+
+        return redirect()->route('admin.dashboard', ['tab' => 'inactivos'])
+            ->with('success', 'Producto reactivado correctamente.');
     }
 }

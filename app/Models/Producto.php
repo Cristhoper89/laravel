@@ -18,7 +18,8 @@ class Producto extends Model
         'unit_of_measurement',
         'image',
         'price',
-        'stock'
+        'stock',
+        'state'
     ];
     public function proveedor()
 {

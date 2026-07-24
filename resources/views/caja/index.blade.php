@@ -108,9 +108,9 @@
                         placeholder="••••••••">
 
                     <!-- BOTÓN DE HUELLA DIGITAL -->
-                    <button type="button" onclick="autenticarConHuella()"
+                    <button type="button" id="btnAutenticarHuella" onclick="autenticarConHuella()"
                         class="w-full mb-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20">
-                        <span>☝️ Autenticar con Huella</span>
+                        <span>☝️ Autenticar con Huella Futronic</span>
                     </button>
 
                     <div class="flex gap-3">
@@ -149,11 +149,10 @@
         </div>
     </div>
 
-    <!-- Script oficial del paquete compilado -->
-    <script src="{{ asset('vendor/webauthn/webauthn.js') }}"></script>
-
     <script>
         let accionActual = '';
+        // 🛠️ Cambia este puerto por el que use tu Web API de C# en localhost
+        const SERVICE_URL = 'http://localhost:5000/api/fingerprint'; 
 
         function abrirModalConfirmacion(accion) {
             accionActual = accion;
@@ -170,14 +169,27 @@
             document.getElementById('modalPassword').classList.remove('hidden');
         }
 
-        // --- AUTENTICACIÓN BIOMÉTRICA (OPCIONAL) ---
+        // --- 1. AUTENTICACIÓN BIOMÉTRICA FUTRONIC (AL DETECTAR HUELLA) ---
         async function autenticarConHuella() {
             const monto = document.getElementById('montoCaja').value;
-
+            const btn = document.getElementById('btnAutenticarHuella');
+            
             try {
-                const webauthn = new WebAuthn();
-                const assertion = await webauthn.login();
+                btn.disabled = true;
+                btn.innerText = "⏳ Coloca tu dedo en el lector...";
 
+                // Llamamos al servicio local en C# para capturar el dedo actual
+                let responseCsharp = await fetch(`${SERVICE_URL}/capture`);
+                if (!responseCsharp.ok) throw new Error("Fallo en el servicio local");
+                
+                let dataCsharp = await responseCsharp.json();
+
+                if (!dataCsharp.success || !dataCsharp.template) {
+                    alert("No se pudo capturar la huella: " + (dataCsharp.message || "Desconocido"));
+                    return;
+                }
+
+                // Enviamos el string Base64 a Laravel para que haga el match en la base de datos
                 let responseProcesar = await fetch('/caja/procesar', {
                     method: 'POST',
                     headers: {
@@ -188,7 +200,7 @@
                         accion: accionActual,
                         monto: monto,
                         auth_type: 'biometric',
-                        webauthn_assertion: assertion
+                        fingerprint_template: dataCsharp.template // Enviamos el Base64 de Futronic
                     })
                 });
 
@@ -197,11 +209,14 @@
 
             } catch (error) {
                 console.error(error);
-                alert("Autenticación biométrica fallida o cancelada.");
+                alert("No se pudo establecer comunicación con el lector Futronic. Asegúrate de que el programa de escritorio de C# esté corriendo.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "☝️ Autenticar con Huella Futronic";
             }
         }
 
-        // --- AUTENTICACIÓN TRADICIONAL POR CONTRASEÑA ---
+        // --- 2. AUTENTICACIÓN TRADICIONAL POR CONTRASEÑA ---
         async function enviarProcesarCaja() {
             const monto = document.getElementById('montoCaja').value;
             const password = document.getElementById('confirmPassword').value;
@@ -230,11 +245,11 @@
                 manejadorRespuestaServidor(response.ok, data);
             } catch (error) {
                 console.error(error);
-                alert("Error de red.");
+                alert("Error de red al intentar procesar la caja.");
             }
         }
 
-        // --- FLUJO DE CONFIGURACIÓN Y REGISTRO DE NUEVA HUELLA ---
+        // --- 3. REGISTRO Y VINCULACIÓN DE NUEVA HUELLA FUTRONIC ---
         function abrirModalRegistroHuella() {
             document.getElementById('passwordParaHuella').value = '';
             document.getElementById('modalRegistroHuella').classList.remove('hidden');
@@ -249,15 +264,14 @@
             }
 
             try {
+                // Validación previa en Laravel de que la clave sea correcta
                 let responseValidar = await fetch('/caja/validar-contrasena', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({
-                        password: password
-                    })
+                    body: JSON.stringify({ password: password })
                 });
 
                 let dataValidar = await responseValidar.json();
@@ -267,18 +281,42 @@
                     return;
                 }
 
+                // Ocultamos el modal de clave y avisamos que use el lector
                 document.getElementById('modalRegistroHuella').classList.add('hidden');
+                alert("Por favor, coloca tu dedo en el lector Futronic ahora...");
 
-                // Inicializamos el flujo de registro nativo de asbiin/laravel-webauthn
-                const webauthn = new WebAuthn();
-                await webauthn.register();
+                // Disparamos la captura de hardware en el software de C#
+                let responseCsharp = await fetch(`${SERVICE_URL}/capture`);
+                if (!responseCsharp.ok) throw new Error("Fallo en el servicio local");
+                
+                let dataCsharp = await responseCsharp.json();
 
-                alert(
-                    "¡Tu huella digital se ha registrado y vinculado con éxito! Ya puedes usarla para abrir o cerrar caja.");
+                if (!dataCsharp.success || !dataCsharp.template) {
+                    alert("Fallo la lectura del hardware: " + dataCsharp.message);
+                    return;
+                }
+
+                // Mandamos el template capturado a tu nuevo controlador de Laravel para guardarlo
+                let responseGuardar = await fetch('/admin/biometria/store', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ template: dataCsharp.template })
+                });
+
+                let dataGuardar = await responseGuardar.json();
+
+                if (dataGuardar.success) {
+                    alert("¡Tu huella digital se ha registrado con éxito en el lector Futronic! Ya está vinculada a tu cuenta.");
+                } else {
+                    alert("Error guardando en el servidor: " + dataGuardar.message);
+                }
 
             } catch (error) {
                 console.error(error);
-                alert("El registro biométrico falló o fue cancelado.");
+                alert("El registro biométrico falló. Verifica que el servicio local C# esté activo.");
             }
         }
 
