@@ -97,7 +97,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // Reportes & Estadísticas
     Route::get('/estadisticas', [PanelEstadisticoController::class, 'index'])->name('admin.estadisticas');
-    Route::get('/facturas/{id}/imprimir', [PanelEstadisticoController::class, 'imprimirFactura'])->name('facturas.imprimir');
     Route::put('/facturas/{id}/update-pago', [FacturaController::class, 'updatePago']);
     Route::patch('/reportes/{id}/toggle', [FacturaController::class, 'toggleReporte']);
     Route::patch('/movimientos/{id}/toggle', [FacturaController::class, 'toggleMovimiento'])->name('movimientos.toggle');
@@ -128,6 +127,7 @@ Route::middleware(['auth', 'role:admin,cajero,cajero2'])->group(function () {
         Route::get('/', [FacturaController::class, 'index'])->name('index');
         Route::get('/{id}', [FacturaController::class, 'show'])->name('show');
     });
+    Route::get('admin/facturas/{id}/imprimir', [PanelEstadisticoController::class, 'imprimirFactura'])->name('facturas.imprimir');
 });
 
 // B) Operaciones y Escritura de Caja (Admin y Cajero)
