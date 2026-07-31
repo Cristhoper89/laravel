@@ -222,7 +222,7 @@ class AdminController extends Controller
      */
     public function createProducto()
     {
-        $proveedores = Proveedor::orderBy('company_name', 'asc')->get();
+        $proveedores = Proveedor::where('estado', 1)->orderBy('company_name', 'asc')->get(); 
         $categorias = Category::where('type', 'activo')->orderBy('name', 'asc')->get();
 
         return view('admin.productos.create', compact('proveedores', 'categorias'));
