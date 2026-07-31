@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class MovimientoCaja extends Model
 {
@@ -19,29 +20,34 @@ class MovimientoCaja extends Model
         'proveedor_id',
         'producto_id',
         'cantidad_producto',
-        'user_id',
+        'user_id'
     ];
 
-    // Relación con el administrador que lo creó
     public function usuario()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Relación por si el gasto involucró a un proveedor
     public function proveedor()
     {
         return $this->belongsTo(Proveedor::class, 'proveedor_id');
     }
 
-    // Relación por si el gasto incrementó el stock de un producto
     public function producto()
     {
         return $this->belongsTo(Producto::class, 'producto_id');
     }
     
     public function caja()
-{
-    return $this->belongsTo(Caja::class, 'caja_id');
-}
+    {
+        return $this->belongsTo(Caja::class, 'caja_id');
+    }
+
+    /**
+     * Relación con la tabla 'reports'
+     */
+    public function reporte(): HasOne
+    {
+        return $this->hasOne(Report::class, 'movimiento_id');
+    }
 }

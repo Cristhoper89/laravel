@@ -47,6 +47,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [AdminController::class, 'edit'])->name('edit');
         Route::put('/{id}/update', [AdminController::class, 'update'])->name('update');
         Route::delete('/{id}/destroy', [AdminController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/toggle', [AdminController::class, 'toggleEstado'])->name('toggle');
     });
 
     // CRUD de Productos
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/store', [ProveedorController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [ProveedorController::class, 'edit'])->name('edit');
         Route::put('/{id}/update', [ProveedorController::class, 'update'])->name('update');
+        Route::patch('/{id}/toggle', [ProveedorController::class, 'toggleEstado'])->name('toggle');
         Route::delete('/{id}/destroy', [ProveedorController::class, 'destroy'])->name('destroy');
     });
 
@@ -77,6 +79,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
         Route::put('/{id}/update', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{id}/destroy', [CategoryController::class, 'destroyProducto'])->name('destroy');
+        Route::patch('/{id}/toggle', [CategoryController::class, 'toggleEstado'])->name('toggle');
     });
 
     Route::put('/admin/facturas/{id}/update-pago', [FacturaController::class, 'updatePago']);
@@ -132,7 +135,7 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/cliente/compras', [FacturaController::class, 'historialCliente'])->name('cliente.compras');
 });
 
-
+Route::patch('/admin/movimientos/{id}/toggle', [FacturaController::class, 'toggleMovimiento'])->name('movimientos.toggle');
 // =========================================================================
 // 🌐 5. PERFIL Y CARRITO (Cualquier usuario autenticado)
 // =========================================================================

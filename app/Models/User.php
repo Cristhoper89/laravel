@@ -9,16 +9,13 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    public const ROLE_ADMIN = 'admin';
-    public const ROLE_DOCENTE = 'docente';
-    public const ROLE_ESTUDIANTE = 'estudiante';
-
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
         'photo',
+        'estado',
     ];
 
     protected $hidden = [
@@ -31,21 +28,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'estado' => 'boolean',
         ];
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->role === self::ROLE_ADMIN;
-    }
-
-    public function isDocente(): bool
-    {
-        return $this->role === self::ROLE_DOCENTE;
-    }
-
-    public function isEstudiante(): bool
-    {
-        return $this->role === self::ROLE_ESTUDIANTE;
     }
 }

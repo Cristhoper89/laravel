@@ -8,6 +8,7 @@ use App\Models\Producto;
 use App\Models\Report; // Asegúrate de que apunte a tu modelo original 'Report'
 use Illuminate\Support\Facades\DB;
 
+
 class MovimientoCajaController extends Controller
 {
     public function store(Request $request)

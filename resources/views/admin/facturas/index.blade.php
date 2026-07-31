@@ -23,7 +23,7 @@
                             class="flex-1 sm:flex-initial text-left px-5 py-3 rounded-2xl border transition duration-200 outline-none">
                         <span class="text-xs his-text-warning block uppercase font-bold tracking-wider mb-0.5">🔴 Gastos / Egresos</span>
                         <span class="text-xl font-black his-text-warning font-mono">
-                            ${{ number_format($movimientos->where('tipo', 'egreso')->sum('monto'), 2) }}
+                            ${{ number_format($movimientos->where('tipo', 'egreso')->filter(fn($m) => ($m->reporte->status ?? 'activo') === 'activo')->sum('monto'), 2) }}
                         </span>
                     </button>
 
@@ -32,7 +32,7 @@
                             class="flex-1 sm:flex-initial text-left px-5 py-3 rounded-2xl border transition duration-200 outline-none">
                         <span class="text-xs his-text-accent block uppercase font-bold tracking-wider mb-0.5">🟢 Entradas Extras</span>
                         <span class="text-xl font-black his-text-accent font-mono">
-                            ${{ number_format($movimientos->where('tipo', 'ingreso')->sum('monto'), 2) }}
+                            ${{ number_format($movimientos->where('tipo', 'ingreso')->filter(fn($m) => ($m->reporte->status ?? 'activo') === 'activo')->sum('monto'), 2) }}
                         </span>
                     </button>
                     
@@ -45,14 +45,23 @@
                 </div>
             </div>
 
+            {{-- Mensaje de Éxito --}}
             @if(session('success'))
                 <div class="mb-6 his-alert-success border rounded-xl p-4 text-sm flex items-center gap-2">
                     <span>✨</span> {{ session('success') }}
                 </div>
             @endif
 
+            {{-- Mensaje de Error --}}
+            @if(session('error'))
+                <div class="mb-6 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl p-4 text-sm flex items-center gap-2 shadow-lg">
+                    <span>🔒</span> {{ session('error') }}
+                </div>
+            @endif
+
             <div class="his-card border rounded-3xl overflow-hidden shadow-2xl">
                 
+                {{-- TABLA DE FACTURAS --}}
                 <div x-show="filtro === 'facturas'" x-transition>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -107,22 +116,25 @@
                                                     👁️ Ver Detalle
                                                 </a>
 
-                                                @if($factura->reporte && $factura->reporte->status === 'activo')
-                                                    <form action="/admin/reportes/{{ $factura->reporte->id }}/toggle" method="POST" onsubmit="return confirm('¿Seguro que deseas desactivar este movimiento de caja? Esto anulará el reporte financiero de esta venta.')">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="p-2 his-btn-danger border rounded-xl transition duration-200 text-xs font-medium">
-                                                            ❌ Desactivar
-                                                        </button>
-                                                    </form>
-                                                @elseif($factura->reporte)
-                                                    <form action="/admin/reportes/{{ $factura->reporte->id }}/toggle" method="POST">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="p-2 his-btn-action border text-slate-500 rounded-xl transition duration-200 text-xs font-medium">
-                                                            🔄 Activar
-                                                        </button>
-                                                    </form>
+                                                {{-- Validación de Rol: Solo si NO es cajero2 se muestran los botones de alternar estado --}}
+                                                @if(auth()->user()->role !== 'cajero2')
+                                                    @if($factura->reporte && $factura->reporte->status === 'activo')
+                                                        <form action="/admin/reportes/{{ $factura->reporte->id }}/toggle" method="POST" onsubmit="return confirm('¿Seguro que deseas desactivar este movimiento de caja?')">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="p-2 his-btn-danger border rounded-xl transition duration-200 text-xs font-medium">
+                                                                ❌ Desactivar
+                                                            </button>
+                                                        </form>
+                                                    @elseif($factura->reporte)
+                                                        <form action="/admin/reportes/{{ $factura->reporte->id }}/toggle" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="p-2 his-btn-action border text-slate-500 rounded-xl transition duration-200 text-xs font-medium">
+                                                                🔄 Activar
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 @endif
                                             </div>
                                         </td>
@@ -140,6 +152,7 @@
                     </div>
                 </div>
 
+                {{-- TABLA DE GASTOS / EGRESOS --}}
                 <div x-show="filtro === 'gastos'" x-transition class="hidden" :class="{ 'hidden': filtro !== 'gastos' }">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -150,7 +163,8 @@
                                     <th class="py-4 px-6">Descripción Detallada</th>
                                     <th class="py-4 px-6">Vínculo Extra</th>
                                     <th class="py-4 px-6">Monto Retirado</th>
-                                    <th class="py-4 px-6 text-center">Fecha</th>
+                                    <th class="py-4 px-6">Estado</th>
+                                    <th class="py-4 px-6 text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800/40 text-sm his-text-main">
@@ -178,13 +192,42 @@
                                         <td class="py-4 px-6 his-text-warning font-bold font-mono">
                                             -${{ number_format($mov->monto, 2) }}
                                         </td>
-                                        <td class="py-4 px-6 text-center his-text-muted text-xs">
-                                            {{ $mov->created_at->format('d/m/Y h:i A') }}
+                                        <td class="py-4 px-6">
+                                            @if(($mov->reporte->status ?? 'activo') === 'activo')
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium his-status-active-bg his-text-success border">
+                                                    <span class="h-1.5 w-1.5 rounded-full his-status-active-dot animate-pulse"></span>
+                                                    Activo
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium his-status-inactive-bg his-text-danger border">
+                                                    <span class="h-1.5 w-1.5 rounded-full his-status-inactive-dot"></span>
+                                                    Desactivado
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="py-4 px-6 text-center">
+                                            @if(auth()->user()->role !== 'cajero2')
+                                                <form action="{{ route('movimientos.toggle', $mov->id) }}" method="POST" onsubmit="return confirm('¿Deseas cambiar el estado de este movimiento de caja?')">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    @if(($mov->reporte->status ?? 'activo') === 'activo')
+                                                        <button type="submit" class="p-2 his-btn-danger border rounded-xl transition duration-200 text-xs font-medium">
+                                                            ❌ Desactivar
+                                                        </button>
+                                                    @else
+                                                        <button type="submit" class="p-2 his-btn-action border text-slate-500 rounded-xl transition duration-200 text-xs font-medium">
+                                                            🔄 Activar
+                                                        </button>
+                                                    @endif
+                                                </form>
+                                            @else
+                                                <span class="his-text-muted text-xs italic">Sin acciones</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="py-12 px-6 text-center his-text-muted">
+                                        <td colspan="7" class="py-12 px-6 text-center his-text-muted">
                                             <div class="text-3xl mb-2">💸</div>
                                             No hay gastos ni egresos operativos registrados en el sistema.
                                         </td>
@@ -195,6 +238,7 @@
                     </div>
                 </div>
 
+                {{-- TABLA DE ENTRADAS EXTRAS / INGRESOS --}}
                 <div x-show="filtro === 'ingresos'" x-transition class="hidden" :class="{ 'hidden': filtro !== 'ingresos' }">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -204,7 +248,8 @@
                                     <th class="py-4 px-6">Concepto / Clasificación</th>
                                     <th class="py-4 px-6">Descripción Detallada</th>
                                     <th class="py-4 px-6">Monto Recibido</th>
-                                    <th class="py-4 px-6 text-center">Fecha</th>
+                                    <th class="py-4 px-6">Estado</th>
+                                    <th class="py-4 px-6 text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800/40 text-sm his-text-main">
@@ -222,13 +267,42 @@
                                         <td class="py-4 px-6 his-text-accent font-bold font-mono">
                                             +${{ number_format($mov->monto, 2) }}
                                         </td>
-                                        <td class="py-4 px-6 text-center his-text-muted text-xs">
-                                            {{ $mov->created_at->format('d/m/Y h:i A') }}
+                                        <td class="py-4 px-6">
+                                            @if(($mov->reporte->status ?? 'activo') === 'activo')
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium his-status-active-bg his-text-success border">
+                                                    <span class="h-1.5 w-1.5 rounded-full his-status-active-dot animate-pulse"></span>
+                                                    Activo
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium his-status-inactive-bg his-text-danger border">
+                                                    <span class="h-1.5 w-1.5 rounded-full his-status-inactive-dot"></span>
+                                                    Desactivado
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="py-4 px-6 text-center">
+                                            @if(auth()->user()->role !== 'cajero2')
+                                                <form action="{{ route('movimientos.toggle', $mov->id) }}" method="POST" onsubmit="return confirm('¿Deseas cambiar el estado de este movimiento de caja?')">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    @if(($mov->reporte->status ?? 'activo') === 'activo')
+                                                        <button type="submit" class="p-2 his-btn-danger border rounded-xl transition duration-200 text-xs font-medium">
+                                                            ❌ Desactivar
+                                                        </button>
+                                                    @else
+                                                        <button type="submit" class="p-2 his-btn-action border text-slate-500 rounded-xl transition duration-200 text-xs font-medium">
+                                                            🔄 Activar
+                                                        </button>
+                                                    @endif
+                                                </form>
+                                            @else
+                                                <span class="his-text-muted text-xs italic">Sin acciones</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="py-12 px-6 text-center his-text-muted">
+                                        <td colspan="6" class="py-12 px-6 text-center his-text-muted">
                                             <div class="text-3xl mb-2">💰</div>
                                             No se han inyectado flujos de entrada extras a la caja base.
                                         </td>

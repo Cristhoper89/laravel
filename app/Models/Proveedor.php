@@ -15,6 +15,11 @@ class Proveedor extends Model
         'phone',
         'email',
         'address',
-        'image'
+        'image',
+        'estado'
+    ];
+
+    protected $casts = [
+    'estado' => 'boolean',
     ];
 }

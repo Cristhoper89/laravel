@@ -83,4 +83,19 @@ class CategoryController extends Controller
 
         return redirect()->route('categorias.index')->with('success', 'Categoría eliminada correctamente.');
     }
+    
+    public function toggleEstado($id)
+    {
+        $categoria = Category::findOrFail($id);
+
+        // Cambia entre 'activo' e 'inactivo'
+        $categoria->type = ($categoria->type === 'activo') ? 'inactivo' : 'activo';
+        $categoria->save();
+
+        $mensaje = ($categoria->type === 'activo')
+            ? 'Categoría reactivada con éxito. 🟢'
+            : 'Categoría desactivada correctamente. 🔴';
+
+        return redirect()->route('categorias.index')->with('success', $mensaje);
+    }
 }

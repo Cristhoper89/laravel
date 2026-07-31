@@ -51,25 +51,25 @@ class ProveedorController extends Controller
             'phone'        => 'nullable|string|max:45',
             'email'        => 'nullable|email|max:255',
             'address'      => 'nullable|string|max:500',
-            'image' => 'nullable',
+            'image'        => 'nullable',
+            'estado'       => 'nullable|boolean',
         ]);
+
+        // Estado activo por defecto al registrar
+        $validated['estado'] = $request->has('estado') ? $request->boolean('estado') : true;
 
         // 2. Procesar y guardar la imagen si fue cargada (Archivo o URL)
         if ($request->hasFile('image')) {
-            // Caso A: Es un archivo local. Validamos que sea imagen real antes de guardar
             $request->validate([
                 'image' => 'image|mimes:jpeg,png,jpg,webp,gif'
             ]);
 
-            // Guarda en storage/app/public/proveedores y retorna la ruta relativa
             $validated['image'] = $request->file('image')->store('proveedores', 'public');
 
         } elseif ($request->filled('image')) {
-            // Caso B: Es texto. Validamos si tiene la estructura de una URL de internet
             if (filter_var($request->input('image'), FILTER_VALIDATE_URL)) {
                 $validated['image'] = $request->input('image');
             } else {
-                // Si mandó texto pero no es una URL válida, regresamos con el error
                 return back()->withErrors(['image' => 'El enlace proporcionado no es una URL válida.'])->withInput();
             }
         }
@@ -105,15 +105,14 @@ class ProveedorController extends Controller
             'email'        => 'nullable|email|max:255',
             'address'      => 'nullable|string|max:500',
             'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'estado'       => 'required|boolean',
         ]);
 
         // 2. Procesar imagen nueva si el usuario la cambia
         if ($request->hasFile('image')) {
-            // Eliminar la imagen anterior del disco para no acumular archivos huérfanos
-            if ($proveedor->image) {
+            if ($proveedor->image && !filter_var($proveedor->image, FILTER_VALIDATE_URL)) {
                 Storage::disk('public')->delete($proveedor->image);
             }
-            // Guardar la nueva imagen
             $validated['image'] = $request->file('image')->store('proveedores', 'public');
         }
 
@@ -124,19 +123,19 @@ class ProveedorController extends Controller
     }
 
     /**
-     * Elimina un proveedor del sistema.
+     * 🔄 Alterna el estado (Activo/Inactivo) del proveedor en lugar de eliminarlo.
      */
-    public function destroy($id)
+    public function toggleEstado($id)
     {
         $proveedor = Proveedor::findOrFail($id);
 
-        // Borrar su imagen del almacenamiento antes de destruir el registro
-        if ($proveedor->image) {
-            Storage::disk('public')->delete($proveedor->image);
-        }
+        $proveedor->estado = !$proveedor->estado;
+        $proveedor->save();
 
-        $proveedor->delete();
+        $mensaje = $proveedor->estado 
+            ? 'Proveedor reactivado con éxito. 🟢' 
+            : 'Proveedor desactivado correctamente. 🔴';
 
-        return redirect()->route('proveedores.index')->with('success', 'Proveedor eliminado del sistema.');
+        return redirect()->route('proveedores.index')->with('success', $mensaje);
     }
 }

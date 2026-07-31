@@ -54,6 +54,18 @@ class AdminController extends Controller
         ));
     }
 
+    public function toggleEstado($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->role === 'admin') {
+        return back()->with('error', 'No está permitido cambiar el estado de un administrador.');
+        }
+        $user->estado = !$user->estado;
+        $user->save();
+
+        $mensaje = $user->estado ? 'Usuario activado correctamente.' : 'Usuario desactivado correctamente.';
+        return redirect()->back()->with('success', $mensaje);
+    }
     // =========================================================================
     // CRUD DE USUARIOS (ADMIN / CLIENTE / CAJERO / CAJERO2)
     // =========================================================================

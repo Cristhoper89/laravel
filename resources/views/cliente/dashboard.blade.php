@@ -44,9 +44,16 @@
                 <span style="color: var(--color-primary);">🔥</span> Menú del Día
             </h3>
 
+            {{-- Filtrar los productos para incluir únicamente los que tengan state activo --}}
+            @php
+                $productosActivos = $productos->filter(function($p) {
+                    return (bool) $p->state;
+                });
+            @endphp
+
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-                @forelse($productos as $producto)
+                @forelse($productosActivos as $producto)
                     <div class="feature-card border rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group transition duration-300">
                         
                         <div class="relative h-48 w-full bg-black/20 overflow-hidden">

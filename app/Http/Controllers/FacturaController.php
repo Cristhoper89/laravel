@@ -14,18 +14,37 @@ use Illuminate\Support\Facades\Auth;
 class FacturaController extends Controller
 {
     /**
+     * Obtiene de forma flexible el porcentaje de IVA registrado en la BD (Soporta 'IVA', 'iva', 'tax')
+     */
+    private function obtenerIvaEmpresa(): float
+    {
+        $empresa = DB::table('company')->first();
+
+        if ($empresa) {
+            if (isset($empresa->IVA) && is_numeric($empresa->IVA)) {
+                return (float) $empresa->IVA;
+            }
+            if (isset($empresa->iva) && is_numeric($empresa->iva)) {
+                return (float) $empresa->iva;
+            }
+            if (isset($empresa->tax) && is_numeric($empresa->tax)) {
+                return (float) $empresa->tax;
+            }
+        }
+
+        return 19.0; // Fallback predeterminado
+    }
+
+    /**
      * Muestra el historial de facturas para el Administrador
      */
     public function index()
     {
-        // ✨ Cargamos las facturas con su reporte de caja asociado para la tabla
         $facturas = Factura::with('reporte')->latest()->get();
         
-        // 2. ✨ TRAE LOS MOVIMIENTOS DESDE LA BASE DE DATOS
-        // Esto recupera los registros necesarios para que las nuevas pestañas no den error
-        $movimientos = MovimientoCaja::orderBy('created_at', 'desc')->get();
+        // Cargamos los movimientos con su reporte financiero asociado
+        $movimientos = MovimientoCaja::with('reporte')->orderBy('created_at', 'desc')->get();
 
-        // 3. ✨ ENVÍA AMBAS VARIABLES A LA VISTA usando compact()
         return view('admin.facturas.index', compact('facturas', 'movimientos'));
     }
 
@@ -34,11 +53,16 @@ class FacturaController extends Controller
      */
     public function show($id)
     {
-        // ✨ Cargamos la factura con sus detalles y los productos correspondientes
-        $factura = Factura::with('detalles.producto')->findOrFail($id);
+        // 1. Cargar factura con sus relaciones
+        $factura = Factura::with(['detalles.producto', 'reporte'])->findOrFail($id);
 
-        // 🔑 CORREGIDO: Apunta a la subcarpeta 'admin'
-        return view('admin.facturas.show', compact('factura'));
+        // 2. Obtener la caja que está actualmente ABIERTA
+        $cajaActiva = \App\Models\Caja::where('estado', 'abierta')->first();
+
+        // 3. Evaluar si la factura pertenece a la caja activa actual
+        $cajaCerrada = !$cajaActiva || ($factura->created_at < $cajaActiva->created_at);
+
+        return view('admin.facturas.show', compact('factura', 'cajaCerrada'));
     }
 
     /**
@@ -46,13 +70,17 @@ class FacturaController extends Controller
      */
     public function store(Request $request)
     {
-        // Asumiendo que recibes un array de productos desde el carrito de compras
+        // Validar el payload de la solicitud
         $request->validate([
             'productos' => 'required|array',
             'productos.*.id' => 'required|exists:productos,id',
             'productos.*.cantidad' => 'required|integer|min:1',
             'metodo_pago' => 'required|string'
         ]);
+
+        // 🔑 Obtenemos el IVA real directamente de la BD (ej. 10.0 en lugar del 19.0 por defecto)
+        $porcentajeIva = $this->obtenerIvaEmpresa();
+        $tasaIva = $porcentajeIva / 100; // Convierte por ejemplo 10 a 0.10
 
         // Usamos una Transacción de Base de Datos por seguridad. 
         DB::beginTransaction();
@@ -78,26 +106,29 @@ class FacturaController extends Controller
                     'cantidad' => $item['cantidad'],
                     'precio_unitario' => $producto->price,
                     'total_linea' => $totalLinea,
-                    'producto_instancia' => $producto // Lo guardamos temporalmente para restarle stock luego
+                    'producto_instancia' => $producto 
                 ];
             }
 
+            $montoImpuesto = $subtotal * $tasaIva;
+            $montoTotal = $subtotal + $montoImpuesto;
+
             // 2. Crear la Cabecera de la Factura
             $factura = Factura::create([
-                'numero_factura' => 'FAC-' . strtoupper(uniqid()), // Genera un código único como FAC-6474F3B
-                'user_id' => Auth::id(), // ID del usuario autenticado que hace la compra
+                'numero_factura' => 'FAC-' . strtoupper(uniqid()), 
+                'user_id' => Auth::id(), 
                 'cliente_nombre' => Auth::user()->name ?? 'Cliente General',
                 'subtotal' => $subtotal,
-                'impuesto' => $subtotal * 0.19, // Ejemplo con el 19% de IVA
-                'total' => $subtotal * 1.19,
+                'impuesto' => $montoImpuesto, // 👈 Ahora sí guardará $1.00 en vez de $1.90 (para $10)
+                'total' => $montoTotal,       // 👈 Ahora sí guardará $11.00 en vez de $11.90
                 'metodo_pago' => $request->metodo_pago,
             ]);
 
             // 3. Crear automáticamente el Reporte/Movimiento de Caja asociado
             Report::create([
-                'type' => 'entrance',       // Marcamos como entrada de dinero al restaurante
-                'status' => 'activo',       // Estado inicial activo
-                'id_factura' => $factura->id // Vinculamos el ID de la factura
+                'type' => 'entrance',       
+                'status' => 'activo',       
+                'id_factura' => $factura->id 
             ]);
 
             // 4. Registrar los detalles y restar el inventario de comida
@@ -110,15 +141,15 @@ class FacturaController extends Controller
                     'total_linea' => $detalle['total_linea'],
                 ]);
 
-                // Restamos el stock del platillo de tu inventario automáticamente
+                // Restamos el stock del platillo de tu inventario
                 $detalle['producto_instancia']->decrement('stock', $detalle['cantidad']);
             }
 
-            DB::commit(); // Guardamos cambios en la DB
+            DB::commit(); 
             session()->forget('carrito');
             return redirect()->route('dashboard')->with('success', '¡Pedido confirmado y enviado a cocina! 🍳');
         } catch (\Exception $e) {
-            DB::rollBack(); // Deshacemos todo lo que se alcanzó a registrar si algo falla
+            DB::rollBack(); 
             return back()->withErrors(['error' => 'Error crítico al procesar la factura: ' . $e->getMessage()]);
         }
     }
@@ -129,6 +160,14 @@ class FacturaController extends Controller
     public function updatePago(Request $request, $id)
     {
         $factura = Factura::findOrFail($id);
+
+        $cajaActiva = \App\Models\Caja::where('estado', 'abierta')->first();
+        $cajaCerrada = !$cajaActiva || ($factura->created_at < $cajaActiva->created_at);
+
+        if ($cajaCerrada) {
+            return redirect()->back()->with('error', 'No se puede modificar el método de pago porque esta transacción no pertenece a una caja abierta.');
+        }
+
         $factura->update([
             'metodo_pago' => $request->metodo_pago
         ]);
@@ -140,60 +179,98 @@ class FacturaController extends Controller
      * Apaga o enciende el reporte financiero según se requiera
      */
     public function toggleReporte($id)
-{
-    // 1. Buscamos el reporte
-    $reporte = Report::findOrFail($id);
+    {
+        $reporte = Report::findOrFail($id);
+        $cajaActiva = \App\Models\Caja::where('estado', 'abierta')->first();
 
-    // Definimos el nuevo estado
-    $nuevoEstado = ($reporte->status === 'activo') ? 'inactivo' : 'activo';
+        $perteneceACajaActiva = $cajaActiva && ($reporte->created_at >= $cajaActiva->created_at);
 
-    // 2. Buscamos la factura vinculada a este reporte (usando la columna id_factura)
-    $factura = \App\Models\Factura::find($reporte->id_factura);
+        if (!$perteneceACajaActiva) {
+            return redirect()->back()->with('error', 'No se puede modificar este movimiento porque no pertenece a la caja abierta actualmente. Solo se permiten cambios en la caja activa.');
+        }
 
-    if ($factura) {
-        // Buscamos todos los productos comprados en esta factura desde la tabla 'factura_detalles'
-        $detalles = \Illuminate\Support\Facades\DB::table('factura_detalles')
-            ->where('factura_id', $factura->id)
-            ->get();
+        $nuevoEstado = ($reporte->status === 'activo') ? 'inactivo' : 'activo';
 
-        foreach ($detalles as $detalle) {
-            $producto = \App\Models\Producto::find($detalle->producto_id);
-            
-            if ($producto) {
-                if ($nuevoEstado === 'inactivo') {
-                    // CASO A: Se está ANULANDO la factura -> Devolvemos los productos al stock
-                    $producto->increment('stock', $detalle->cantidad);
-                } else {
-                    // CASO B: Se está REACTIVANDO la factura -> Volvemos a restar del stock
-                    $producto->decrement('stock', $detalle->cantidad);
+        $factura = Factura::find($reporte->id_factura);
+        
+        if ($factura) {
+            $detalles = FacturaDetalle::where('factura_id', $factura->id)->get();
+
+            foreach ($detalles as $detalle) {
+                $producto = Producto::find($detalle->producto_id);
+                if ($producto) {
+                    if ($nuevoEstado === 'inactivo') {
+                        $producto->increment('stock', $detalle->cantidad);
+                    } else {
+                        $producto->decrement('stock', $detalle->cantidad);
+                    }
                 }
             }
         }
+
+        $reporte->update(['status' => $nuevoEstado]);
+
+        $mensaje = ($nuevoEstado === 'inactivo') 
+            ? "Movimiento desactivado con éxito de la caja actual. El stock fue devuelto al inventario." 
+            : "Movimiento reactivado con éxito.";
+
+        return redirect()->back()->with('success', $mensaje);
     }
 
-    // 3. Actualizamos el estado del reporte
-    $reporte->update([
-        'status' => $nuevoEstado
-    ]);
-
-    $mensaje = $nuevoEstado === 'inactivo' 
-        ? "La venta fue anulada correctamente y los productos regresaron al stock." 
-        : "La venta fue reactivada correctamente y los productos se descontaron del stock.";
-
-    return redirect()->back()->with('success', $mensaje);
-}
     /**
      * Muestra el historial de compras exclusivo del cliente autenticado
      */
     public function historialCliente()
     {
-        // Traemos las facturas del usuario actual, de la más reciente a la más antigua
         $facturas = Factura::with('detalles.producto')
             ->where('user_id', Auth::id())
             ->latest()
             ->get();
 
-        // Retornamos la vista que crearemos en el siguiente paso
-        return view('cliente.compras_historial', compact('facturas'));
+        $porcentajeIva = $this->obtenerIvaEmpresa();
+
+        return view('cliente.compras_historial', compact('facturas', 'porcentajeIva'));
+    }
+
+    /**
+     * Activa o desactiva un movimiento manual de caja (Gastos / Entradas Extras)
+     */
+    public function toggleMovimiento($id)
+    {
+        $movimiento = MovimientoCaja::findOrFail($id);
+        $cajaActiva = \App\Models\Caja::where('estado', 'abierta')->first();
+
+        $perteneceACajaActiva = $cajaActiva && ($movimiento->created_at >= $cajaActiva->created_at);
+
+        if (!$perteneceACajaActiva) {
+            return redirect()->back()->with('error', 'No se puede modificar este movimiento porque no pertenece a la caja abierta actualmente.');
+        }
+
+        $reporte = Report::where('movimiento_id', $movimiento->id)->first();
+
+        if (!$reporte) {
+            return redirect()->back()->with('error', 'No se encontró el reporte financiero asociado a este movimiento.');
+        }
+
+        $nuevoEstado = ($reporte->status === 'activo') ? 'inactivo' : 'activo';
+
+        if ($movimiento->producto_id && $movimiento->cantidad_producto) {
+            $producto = Producto::find($movimiento->producto_id);
+            if ($producto) {
+                if ($nuevoEstado === 'inactivo') {
+                    $producto->decrement('stock', $movimiento->cantidad_producto);
+                } else {
+                    $producto->increment('stock', $movimiento->cantidad_producto);
+                }
+            }
+        }
+
+        $reporte->update(['status' => $nuevoEstado]);
+
+        $mensaje = ($nuevoEstado === 'inactivo') 
+            ? "Movimiento de caja desactivado con éxito." 
+            : "Movimiento de caja reactivado con éxito.";
+
+        return redirect()->back()->with('success', $mensaje);
     }
 }

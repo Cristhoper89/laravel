@@ -66,26 +66,46 @@
                     <!-- Input oculto con la suma de cierre recomendada para la acción del JS -->
                     <input type="hidden" id="montoCaja" value="{{ $totales['monto_cierre_calculado'] }}">
 
-                    <button onclick="abrirModalConfirmacion('cerrar')"
-                        class="w-full font-black py-4 rounded-2xl transition duration-200 shadow-md text-sm uppercase tracking-wide border-none text-white bg-rose-600 hover:bg-rose-700 cursor-pointer">
-                        Cerrar Caja con Balance Esperado 🔒
-                    </button>
+                    {{-- Validación de Rol para Cerrar Caja --}}
+                    @if (auth()->user()->role === 'cajero2')
+                        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold text-center flex items-center justify-center gap-2">
+                            <span>🔒</span> Sin permisos para realizar el cierre de caja.
+                        </div>
+                    @else
+                        <button onclick="abrirModalConfirmacion('cerrar')"
+                            class="w-full font-black py-4 rounded-2xl transition duration-200 shadow-md text-sm uppercase tracking-wide border-none text-white bg-rose-600 hover:bg-rose-700 cursor-pointer">
+                            Cerrar Caja con Balance Esperado 🔒
+                        </button>
+                    @endif
+
                 @else
                     <div class="bg-black/20 p-6 rounded-2xl border border-white/5 mb-6">
                         <p class="text-rose-400 text-sm mb-4 font-bold">🔴 ESTADO: CAJA CERRADA</p>
-                        <div class="text-left">
-                            <label class="block text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Monto
-                                Base de Apertura (Efectivo en Caja)</label>
-                            <input type="number" id="montoCaja"
-                                class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white text-center focus:outline-none text-lg font-bold"
-                                placeholder="0.00" value="0">
-                        </div>
+                        
+                        @if (auth()->user()->role !== 'cajero2')
+                            <div class="text-left">
+                                <label class="block text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+                                    Monto Base de Apertura (Efectivo en Caja)
+                                </label>
+                                <input type="number" id="montoCaja"
+                                    class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white text-center focus:outline-none text-lg font-bold"
+                                    placeholder="0.00" value="0">
+                            </div>
+                        @endif
                     </div>
-                    <button onclick="abrirModalConfirmacion('abrir')"
-                        class="w-full font-black py-4 rounded-2xl transition duration-200 shadow-md text-sm uppercase tracking-wide border-none text-white cursor-pointer"
-                        style="background-color: var(--color-primary, #b91c1c);">
-                        Abrir Nueva Caja 🔓
-                    </button>
+
+                    {{-- Validación de Rol para Abrir Caja --}}
+                    @if (auth()->user()->role === 'cajero2')
+                        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold text-center flex items-center justify-center gap-2">
+                            <span>🔒</span> Sin permisos para aperturar nueva caja.
+                        </div>
+                    @else
+                        <button onclick="abrirModalConfirmacion('abrir')"
+                            class="w-full font-black py-4 rounded-2xl transition duration-200 shadow-md text-sm uppercase tracking-wide border-none text-white cursor-pointer"
+                            style="background-color: var(--color-primary, #b91c1c);">
+                            Abrir Nueva Caja 🔓
+                        </button>
+                    @endif
                 @endif
             </div>
 
@@ -119,7 +139,8 @@
 
         function abrirModalConfirmacion(accion) {
             accionActual = accion;
-            const monto = document.getElementById('montoCaja').value;
+            const inputMonto = document.getElementById('montoCaja');
+            const monto = inputMonto ? inputMonto.value : 0;
 
             if (monto === '' || monto < 0) {
                 alert("Por favor, ingresa un monto base inicial válido.");
@@ -132,7 +153,8 @@
         }
 
         async function enviarProcesarCaja() {
-            const monto = document.getElementById('montoCaja').value;
+            const inputMonto = document.getElementById('montoCaja');
+            const monto = inputMonto ? inputMonto.value : 0;
             const password = document.getElementById('confirmPassword').value;
 
             if (!password) {
@@ -145,6 +167,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     body: JSON.stringify({
@@ -162,7 +185,7 @@
                     document.getElementById('modalPassword').classList.add('hidden');
                     window.location.reload();
                 } else {
-                    alert(data.message || "Ocurrió un error.");
+                    alert(data.message || "Ocurrió un error o no tienes permisos.");
                 }
             } catch (error) {
                 console.error(error);

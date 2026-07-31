@@ -13,35 +13,67 @@ use Illuminate\Support\Facades\DB;
 
 class AdminVentaController extends Controller
 {
+    /**
+     * Obtiene el valor dinámico del IVA directamente desde la BD.
+     */
+    private function obtenerIvaEmpresa(): float
+{
+    $empresa = DB::table('company')->first();
+
+    if ($empresa) {
+        // 1. Verificamos la columna en Mayúsculas (como está en tu phpMyAdmin 'IVA')
+        if (isset($empresa->IVA) && is_numeric($empresa->IVA)) {
+            return (float) $empresa->IVA;
+        }
+
+        // 2. Verificamos por si acaso en minúsculas ('iva')
+        if (isset($empresa->iva) && is_numeric($empresa->iva)) {
+            return (float) $empresa->iva;
+        }
+
+        // 3. Verificamos si existe bajo otros nombres comunes ('tax' o 'impuesto')
+        if (isset($empresa->tax) && is_numeric($empresa->tax)) {
+            return (float) $empresa->tax;
+        }
+    }
+
+    // Backup final si la tabla estuviera vacía
+    return 19.0;
+}
+
     public function create()
     {
-        // 1. Traemos los productos con stock disponible
-        $productos = Producto::where('stock', '>', 0)->orderBy('name', 'asc')->get();
+        $porcentajeIva = $this->obtenerIvaEmpresa();
+
+        // 1. Productos activos con stock
+        $productos = Producto::where('stock', '>', 0)->where('state', true)->orderBy('name', 'asc')->get();
         
-        // 2. Traemos SOLO a los usuarios registrados cuyo rol sea 'cliente'
+        // 2. Clientes
         $clientes = User::where('role', 'cliente')->orderBy('name', 'asc')->get();
 
-        // 3. Traemos los proveedores para el formulario de movimientos de La Cabaña
+        // 3. Proveedores
         $proveedores = Proveedor::all();
 
-        // ✨ SOLUCIÓN: Agregamos 'proveedores' dentro del compact() para que viaje a la vista
-        return view('admin.ventas_create', compact('productos', 'clientes', 'proveedores'));
+        return view('admin.ventas_create', compact('productos', 'clientes', 'proveedores', 'porcentajeIva'));
     }
 
     public function store(Request $request)
     {
-        // Validamos la información entrante
         $request->validate([
-            'user_id'       => 'nullable|exists:users,id',
-            'metodo_pago'   => 'required|string',
-            'productos'     => 'required|array|min:1',
-            'productos.*.id'=> 'required|exists:productos,id',
+            'user_id'          => 'nullable|exists:users,id',
+            'metodo_pago'      => 'required|string',
+            'productos'        => 'required|array|min:1',
+            'productos.*.id'   => 'required|exists:productos,id',
             'productos.*.cant' => 'required|integer|min:1',
         ], [
-        'productos.required' => 'Debe agregar al menos un producto a la venta.',
-        'productos.array' => 'Los productos enviados no son válidos.',
-        'productos.min' => 'Debe seleccionar al menos un producto.',
-    ]);
+            'productos.required' => 'Debe agregar al menos un producto a la venta.',
+            'productos.array'    => 'Los productos enviados no son válidos.',
+            'productos.min'      => 'Debe seleccionar al menos un producto.',
+        ]);
+
+        // Obtenemos el porcentaje directamente de la BD
+        $porcentajeIva = $this->obtenerIvaEmpresa();
+        $tasaIva = $porcentajeIva / 100;
 
         try {
             DB::beginTransaction();
@@ -49,7 +81,6 @@ class AdminVentaController extends Controller
             $subtotalFactura = 0;
             $detallesPreparados = [];
 
-            // Procesamos los productos elegidos utilizando la estructura de tu negocio
             foreach ($request->productos as $item) {
                 $producto = Producto::findOrFail($item['id']);
 
@@ -65,15 +96,14 @@ class AdminVentaController extends Controller
                     'cantidad'        => $item['cant'],
                     'precio_unitario' => $producto->price,
                     'total_linea'     => $totalLinea,
-                    'instancia'       => $producto // Reservado para decrementar stock
+                    'instancia'       => $producto
                 ];
             }
 
-            // Calculamos impuestos basados en tu esquema (19% IVA)
-            $impuesto = $subtotalFactura * 0.19;
+            // Cálculo dinámico de impuestos
+            $impuesto = $subtotalFactura * $tasaIva;
             $totalFinal = $subtotalFactura + $impuesto;
 
-            // Buscamos el nombre del cliente si fue asignado, si no, es 'Cliente General'
             $clienteNombre = 'Cliente General';
             if ($request->user_id) {
                 $userAsociado = User::find($request->user_id);
@@ -82,10 +112,10 @@ class AdminVentaController extends Controller
                 }
             }
 
-            // 1. Crear la Cabecera de la Factura usando tus campos exactos
+            // 1. Crear Cabecera de la Factura
             $factura = Factura::create([
                 'numero_factura' => 'FAC-' . strtoupper(uniqid()),
-                'user_id'        => $request->user_id, // Puede ser null si es público general
+                'user_id'        => $request->user_id,
                 'cliente_nombre' => $clienteNombre,
                 'subtotal'       => $subtotalFactura,
                 'impuesto'       => $impuesto,
@@ -93,14 +123,14 @@ class AdminVentaController extends Controller
                 'metodo_pago'    => $request->metodo_pago,
             ]);
 
-            // 2. Crear automáticamente el Reporte/Movimiento de Caja asociado
+            // 2. Crear Movimiento / Reporte
             Report::create([
                 'type'       => 'entrance',
                 'status'     => 'activo',
                 'id_factura' => $factura->id
             ]);
 
-            // 3. Guardar los Detalles y descontar stock automáticamente
+            // 3. Guardar Detalles y Descontar Inventario
             foreach ($detallesPreparados as $detalle) {
                 FacturaDetalle::create([
                     'factura_id'      => $factura->id,
@@ -110,7 +140,6 @@ class AdminVentaController extends Controller
                     'total_linea'     => $detalle['total_linea'],
                 ]);
 
-                // Descontamos del inventario
                 $detalle['instancia']->decrement('stock', $detalle['cantidad']);
             }
 

@@ -14,9 +14,13 @@
                     <h1 class="text-2xl font-bold prv-main-title flex items-center gap-2">Gestión de Proveedores 📦</h1>
                     <p class="prv-subtitle text-sm mt-1">Administra las empresas y contactos que surten los productos de tu inventario.</p>
                 </div>
-                <a href="{{ route('proveedores.create') }}" class="prv-btn-submit font-bold px-5 py-3 rounded-2xl transition duration-200 flex items-center gap-2 text-sm shadow-md no-underline">
-                    <i class="fa-solid fa-truck-ramp-box"></i> Nuevo Proveedor
-                </a>
+                
+                {{-- Ocultar botón de crear a cajeros --}}
+                @unless(auth()->user()->role === 'cajero')
+                    <a href="{{ route('proveedores.create') }}" class="prv-btn-submit font-bold px-5 py-3 rounded-2xl transition duration-200 flex items-center gap-2 text-sm shadow-md no-underline">
+                        <i class="fa-solid fa-truck-ramp-box"></i> Nuevo Proveedor
+                    </a>
+                @endunless
             </div>
 
             <div class="prv-card border rounded-3xl p-6 shadow-xl">
@@ -42,12 +46,17 @@
                                 <th class="p-4">Contacto</th>
                                 <th class="p-4">Teléfono</th>
                                 <th class="p-4">Correo Electrónico</th>
-                                <th class="p-4 text-center w-32">Acciones</th>
+                                <th class="p-4 text-center w-28">Estado</th>
+                                
+                                {{-- Solo mostrar la columna Acciones a Administradores --}}
+                                @unless(auth()->user()->role === 'cajero')
+                                    <th class="p-4 text-center w-36">Acciones</th>
+                                @endunless
                             </tr>
                         </thead>
                         <tbody class="divide-y prv-table-divide text-sm prv-table-body">
                             @forelse($proveedores as $proveedor)
-                                <tr class="prv-table-row transition duration-150">
+                                <tr class="prv-table-row transition duration-150 {{ !$proveedor->estado ? 'opacity-60 bg-slate-900/40' : '' }}">
                                     <td class="p-4 text-center prv-id-cell font-mono">#{{ $proveedor->id }}</td>
 
                                     <td class="p-4">
@@ -70,30 +79,57 @@
                                     <td class="p-4 prv-mono-text font-mono">{{ $proveedor->phone ?? 'N/A' }}</td>
                                     <td class="p-4 prv-info-text">{{ $proveedor->email ?? 'N/A' }}</td>
                                     
+                                    {{-- Columna de Estado --}}
                                     <td class="p-4 text-center">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <a href="{{ route('proveedores.edit', $proveedor->id) }}"
-                                                class="flex items-center justify-center w-9 h-9 prv-action-btn prv-edit-btn rounded-xl transition duration-150 shadow-inner"
-                                                title="Editar">
-                                                <i class="fa-solid fa-pen-to-square text-base"></i>
-                                            </a>
-
-                                            <form action="{{ route('proveedores.destroy', $proveedor->id) }}" method="POST" class="inline m-0"
-                                                onsubmit="return confirm('¿Estás seguro de eliminar este proveedor?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="flex items-center justify-center w-9 h-9 prv-action-btn prv-delete-btn rounded-xl transition duration-150 shadow-inner"
-                                                    title="Eliminar">
-                                                    <i class="fa-solid fa-trash text-base"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                                        @if($proveedor->estado)
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                                🟢 Activo
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                                                🔴 Inactivo
+                                            </span>
+                                        @endif
                                     </td>
+
+                                    {{-- Columna de Acciones (Oculta para Cajeros) --}}
+                                    @unless(auth()->user()->role === 'cajero')
+                                        <td class="p-4 text-center">
+                                            <div class="flex items-center justify-center gap-2">
+                                                {{-- Editar --}}
+                                                <a href="{{ route('proveedores.edit', $proveedor->id) }}"
+                                                    class="flex items-center justify-center w-9 h-9 prv-action-btn prv-edit-btn rounded-xl transition duration-150 shadow-inner"
+                                                    title="Editar">
+                                                    <i class="fa-solid fa-pen-to-square text-base"></i>
+                                                </a>
+
+                                                {{-- Toggle Activar/Desactivar --}}
+                                                <form action="{{ route('proveedores.toggle', $proveedor->id) }}" method="POST" class="inline m-0"
+                                                    onsubmit="return confirm('¿Deseas cambiar el estado de este proveedor?')">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    @if($proveedor->estado)
+                                                        <button type="submit"
+                                                            class="flex items-center justify-center w-9 h-9 prv-action-btn prv-delete-btn rounded-xl transition duration-150 shadow-inner"
+                                                            title="Desactivar Proveedor">
+                                                            <i class="fa-solid fa-power-off text-base text-rose-400"></i>
+                                                        </button>
+                                                    @else
+                                                        <button type="submit"
+                                                            class="flex items-center justify-center w-9 h-9 prv-action-btn rounded-xl transition duration-150 shadow-inner bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
+                                                            title="Reactivar Proveedor">
+                                                            <i class="fa-solid fa-rotate-left text-base"></i>
+                                                        </button>
+                                                    @endif
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endunless
+
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="p-8 text-center prv-subtitle">
+                                    <td colspan="{{ auth()->user()->role === 'cajero' ? 7 : 8 }}" class="p-8 text-center prv-subtitle">
                                         <i class="fa-solid fa-boxes-packing text-3xl mb-2 block prv-empty-icon"></i>
                                         No se encontraron proveedores registrados.
                                     </td>

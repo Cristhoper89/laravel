@@ -42,9 +42,17 @@
 
         <div class="auth-card border rounded-3xl p-8 shadow-2xl">
             
+            {{-- Alerta para mensajes flash de error (ej: cuenta inactiva) --}}
+            @if (session('error'))
+                <div class="auth-errors-box mb-4 border border-rose-500/30 bg-rose-500/10 text-rose-400 rounded-xl p-3 text-xs font-medium flex items-center gap-2 shadow-md">
+                    <span>🚫 {{ session('error') }}</span>
+                </div>
+            @endif
+
+            {{-- Errores de validación de Laravel (credenciales incorrectas, etc.) --}}
             @if ($errors->any())
-                <div class="auth-errors-box mb-4 border rounded-xl p-3 text-xs font-medium">
-                    <ul>
+                <div class="auth-errors-box mb-4 border border-rose-500/30 bg-rose-500/10 text-rose-400 rounded-xl p-3 text-xs font-medium">
+                    <ul class="space-y-1">
                         @foreach ($errors->all() as $error)
                             <li>⚠️ {{ $error }}</li>
                         @endforeach
